@@ -25,4 +25,4 @@ npm run build
 
 Add your AWS access keys per region (only needs ec2.describeInstances currently)
 
-(http://ricktbaker.com/img/devops_helper/access_keys.png)
+![Access Keys](screenshots/access_keys.png "Add access keys per region, only requires ec2:describeInstances currently")
