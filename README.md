@@ -1,6 +1,12 @@
 # devops_shell
 
-> Devops Shell
+> Devops Helper
+
+This project is meant to help those that work with a number of AWS accounts.   Always having to login to the console to find the server you want to connect to, if you need to use a bastion host, what key you need to use, etc.
+
+This is still very early in the development phase, and has been developed on a Mac, so your mileage may vary on other platforms.
+
+
 
 #### Build Setup
 
@@ -22,7 +28,3 @@ npm test
 npm run lint
 
 ```
-
----
-
-This project was generated with [electron-vue](https://github.com/SimulatedGREG/electron-vue)@[331f85f](https://github.com/SimulatedGREG/electron-vue/tree/331f85fd556cc0d60a30ad019a44a29baaed49f5) using [vue-cli](https://github.com/vuejs/vue-cli). Documentation about the original structure can be found [here](https://simulatedgreg.gitbooks.io/electron-vue/content/index.html).
