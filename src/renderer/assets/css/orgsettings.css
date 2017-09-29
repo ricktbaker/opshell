@@ -1,0 +1,112 @@
+.userSelect {
+  background: #000000 !important;
+  color: #aaaaaa !important;
+  font-size: 13px;
+  margin: 0;
+  padding: 0px 10px;
+  width: 90%;
+  border: none;
+  height: 25px;
+}
+
+#awsRegionId {
+  background: #000000;
+  color: #aaaaaa;
+  width: 100vw;
+  font-size: 13px;
+  margin: 0;
+  padding: 0px 10px;
+}
+
+#orgSettingsBody #addNew {
+  margin-top: 20px;
+}
+
+.modal-body {
+  padding-bottom: 10px !important;
+}
+
+#regionSettings {
+  font-size: 13px;
+  border: none;
+}
+#regionSettings tr th {
+  background: #222222;
+  border: none !important;
+}
+#regionSettings thead, #regionSettings tbody, #regionSettings tr td {
+  border: none !important;
+}
+
+.regionCard .card {
+  margin: 7px 0;
+  border-radius: 2px;
+  box-shadow: 4px 4px 8px #000;
+  border: 1px solid #999999;
+}
+
+#orgSettingsBody .form-control {
+  border-color: #555555;
+}
+
+#orgSettingsBody .form-control:focus {
+  background: #000000;
+  color: #aaaaaa;
+
+}
+
+.regionCard .card-header {
+  background: #222222;
+  padding: 5px 10px;
+}
+
+.regionCard .card-block {
+  padding: 5px 10px;
+  background: #444444;
+}
+
+.regionCard .card-footer {
+  padding: 5px 10px;
+  background: #222222;
+}
+
+.regionCard .card-header .btn-sm {
+  font-size: 10px;
+  padding: 0px 5px;
+  cursor: pointer;
+}
+
+.regionCard .card-header .btn-sm:hover {
+  background: #999999;
+}
+
+.keystable {
+  border-top: 1px solid #888888;
+  margin-top: 10px;
+}
+
+.keystable tr td, .keystable tr th {
+  border: none;
+}
+
+.btn-file {
+  position: relative;
+  overflow: hidden;
+  padding: 2px 5px;
+}
+
+.btn-file input[type=file] {
+  position: absolute;
+  top: 0;
+  right: 0;
+  min-width: 100%;
+  min-height: 100%;
+  font-size: 100px;
+  text-align: right;
+  filter: alpha(opacity=0);
+  opacity: 0;
+  outline: none;
+  background: white;
+  cursor: inherit;
+  display: block;
+}

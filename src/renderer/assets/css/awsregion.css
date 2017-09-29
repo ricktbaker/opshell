@@ -1,0 +1,38 @@
+#regionTable tbody:nth-child(odd) {
+  background: #333333 !important;
+}
+
+#regionTable {
+  font-size: 12px;
+}
+
+#regionTable .instanceData {
+  cursor: pointer;
+}
+
+#regionTable tbody {
+  border: none;
+  border-bottom: 1px solid #555555;
+}
+
+#regionTable tr td {
+  border: none !important;
+}
+#regionTable tr th {
+  background: #111111;
+  border: none;
+}
+
+#regionTable .select {
+  background: #000000;
+  color: #aaaaaa;
+  font-size: 13px;
+  margin: 0;
+  padding: 0px 10px;
+  border: none;
+}
+
+#regionSettingsHeader th {
+  background: #222222 !important;
+  border-bottom: 1px solid #555555;
+}

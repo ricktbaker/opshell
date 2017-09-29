@@ -1,0 +1,10 @@
+#alertBox {
+  padding: 2px;
+  position: fixed;
+  z-index: 500;
+  width: 100vw;
+  color: #dddddd;
+  text-align: center;
+  background: black;
+  border-bottom: 1px solid red;
+}

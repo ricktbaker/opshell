@@ -1,0 +1,75 @@
+#mainView {
+  padding-left: 45px;
+  height: 100%;
+  background: #222222;
+  margin-right: 0;
+  margin-left: 0;
+  color: #aaaaaa;
+}
+
+#navWrapper {
+  overflow-x: auto;
+}
+.nav-tabs {
+  border: none;
+  background: #444444;
+  border-left: 1px solid #000000;
+  height: 40px;
+  min-width: 102%;
+  border-bottom: none !important;
+  overflow-x: auto;
+}
+
+li {
+  display:inline;
+}
+
+.tab-content {
+  margin: 5px;
+}
+
+.nav-tabs>li>a {
+  background-color: #555555;
+  color:#fff;
+  height: 40px;
+  border: none !important;
+  font-size: 11px;
+}
+
+.navtable {
+  min-width: 150px;
+  width: 150px;
+  table-layout: fixed;
+}
+
+.navtable .tabname {
+  width: 100px;
+  text-align: center;
+  overflow-x: auto;
+}
+
+.navtable .tabname span {
+  white-space: nowrap;
+}
+
+.navtable .tabicon {
+  text-align: center
+}
+
+.mavtable .tabicon>i {
+  margin-top: 10px;
+}
+
+.nav-tabs>li>a:hover {
+  border: none;
+}
+.nav-tabs>li>a:hover i{
+  color: white;
+  border: none;
+}
+
+.nav-tabs > li > a.active{
+  background: #222222 !important;
+  color: #aaaaaa !important;
+  text-decoration: none;
+}
