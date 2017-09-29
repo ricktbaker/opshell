@@ -3,7 +3,7 @@
   "version": "0.1",
   "author": "rickbaker <rick@ricktbaker.com>",
   "description": "Devops Helper",
-  "license": "GNU GPLv3",
+  "license": "MIT",
   "main": "./dist/electron/main.js",
   "scripts": {
     "build": "node .electron-vue/build.js && electron-builder",
