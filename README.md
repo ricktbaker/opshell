@@ -8,6 +8,14 @@ This is still very early in the development phase.   It has some rough edges for
 
 It's built on electron and vue which at this point in time I have about 1 week experience with, so there are probably many things that can be done better, cleaner, etc.   I wanted to learn the electron/vue combo and wanted to make something useful in the process.
 
+Primary Components:
+
+- Electron
+- Vuew
+- XTerm.js
+- node-pty
+- Amazon SDK
+
 #### Build Setup
 
 ``` bash
@@ -54,5 +62,7 @@ So much more.   Eventually would like to add regular server support, google clou
 Preferences, colors, styles, etc.
 
 Ability to show more details about servers
+
+Use native ssh2 module instead of relying on node-pty
 
 Too much to list...
