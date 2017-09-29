@@ -25,4 +25,20 @@ npm run build
 
 Add your AWS access keys per region (only needs ec2.describeInstances currently)
 
-![Access Keys](screenshots/access_keys.png "Add access keys per region, only requires ec2:describeInstances currently")
+![Access Keys](screenshots/access_keys.png "")
+
+Scan for keys that are used for SSH access, and import them
+
+![SSH Keys](screenshots/import_keys.png "")
+
+Easily list out instances in regions you have setup
+
+![Region List](screenshots/instanceList.png "")
+
+Setup a bastion host per region if you need to ssh into it first to access private ip servers behind
+
+![Bastion Host](screenshots/bastion_host.png "")
+
+Easily connect via ssh to a server with the click of a button
+
+![SSH Connect](screenshots/ssh_connection.png "")
