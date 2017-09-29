@@ -1,4 +1,4 @@
-# devops_shell
+# devops_helper
 
 > Devops Helper
 
@@ -19,12 +19,10 @@ npm run dev
 
 # build electron application for production
 npm run build
-
-# run unit & end-to-end tests
-npm test
-
-
-# lint all JS/Vue component files in `src/`
-npm run lint
-
 ```
+
+#### What is working thus far
+
+Add your AWS access keys per region (only needs ec2.describeInstances currently)
+
+(http://ricktbaker.com/img/devops_helper/access_keys.png)
