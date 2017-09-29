@@ -1,9 +1,9 @@
 {
   "name": "devops_shell",
-  "version": "0.0.0",
+  "version": "0.1",
   "author": "rickbaker <rick@ricktbaker.com>",
-  "description": "Devops Shell",
-  "license": null,
+  "description": "Devops Helper",
+  "license": "GNU GPLv3",
   "main": "./dist/electron/main.js",
   "scripts": {
     "build": "node .electron-vue/build.js && electron-builder",
