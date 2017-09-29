@@ -11,7 +11,7 @@ It's built on electron and vue which at this point in time I have about 1 week e
 Primary Components:
 
 - Electron
-- Vuew
+- Vue
 - XTerm.js
 - node-pty
 - Amazon SDK
