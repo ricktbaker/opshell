@@ -1,4 +1,6 @@
-# !(icons/64x64.png) DevOps Helper
+<img align="center" src="logo.png" alt="DevOps Helper">
+
+# DevOps Helper
 
 This is my current pet project which is meant to help those that work with a number of AWS accounts.   Always having to login to the console to find the server you want to connect to, if you need to use a bastion host, what key you need to use, etc.
 
