@@ -36,3 +36,13 @@
   background: #222222 !important;
   border-bottom: 1px solid #555555;
 }
+
+#regionSettingsHeader input {
+  background: #000000;
+  color: #aaaaaa;
+  font-size: 13px;
+}
+
+#regionHeaders th {
+  cursor: pointer;
+}

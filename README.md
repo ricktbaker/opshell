@@ -16,6 +16,10 @@ Primary Components:
 - node-pty
 - Amazon SDK
 
+#### Changelog
+
+[View the Current ChangeLog](CHANGELOG.md)
+
 
 #### Build Setup
 

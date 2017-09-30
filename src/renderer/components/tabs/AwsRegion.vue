@@ -2,22 +2,24 @@
   <table id="regionTable" class="table table-sm table-condensed">
     <thead>
       <tr id="regionSettingsHeader">
-        <th colspan="3">
-          <!-- <input class="form-control input-sm" placeholder="search"></input> -->
+        <th colspan="2">
+          <input id="instanceSearch" v-on:keyup="instanceSearch()" class="form-control input-sm" placeholder="Search instances"></input>
+        </th>
+        <th>
         </th>
         <th colspan="3">
           <i v-on:click="regionSettings()" class="fa fa-cog fa-2x pull-right" title="Region Settings"></i>
         </th>
-      <tr>
-        <th>Name</th>
-        <th>Instance ID</th>
-        <th>Instance Type</th>
-        <th>State</th>
-        <th>Public IP</th>
-        <th>Private IP</th>
+      <tr id="regionHeaders">
+        <th v-on:click="doSort('name')">Name <i id='nameSort'></i></th>
+        <th v-on:click="doSort('instanceId')">Instance ID <i id='instanceIdSort'></i></th>
+        <th v-on:click="doSort('instanceType')">Instance Type <i id='instanceTypeSort'></i></th>
+        <th v-on:click="doSort('state')">State <i id='stateSort'></i></th>
+        <th v-on:click="doSort('publicIp')">Public IP <i id='publicIpSort'></i></th>
+        <th v-on:click="doSort('privateIp')">Private IP <i id='privateIpSort'></i></th>
       </tr>
     </thead>
-    <tbody v-for="instance in instances" v-bind:key="instance.name">
+    <tbody v-for="instance in instanceData" v-bind:key="instance.instanceId">
       <tr class="instanceData" v-on:click="toggleDetails(instance.instanceId)">
         <td>
           <i :id="'caret' + instance.instanceId" class="fa fa-caret-right"></i> &nbsp;
@@ -77,12 +79,15 @@ export default {
       orgId: null,
       awsRegionId: null,
       instances: [],
+      instanceData: [],
       test: null,
       tab: null,
       awsRegion: null,
       org: null,
       rendered: false,
-      tempData: []
+      tempData: [],
+      sortKey: null,
+      sortDir: null
     }
   },
   mounted: function () {
@@ -104,6 +109,58 @@ export default {
     })
   },
   methods: {
+
+    /**
+     * Search Instances
+     */
+    instanceSearch: function() {
+      const searchString = $('#instanceSearch').val()
+      if (!searchString) {
+        this.instanceData = this.instances
+        return
+      }
+      _.each(this.instanceData, (instance) => {
+        let found = false
+        _.each(instance, (val, key) => {
+          if (_.includes(val, searchString)) {
+            found = true
+          }
+        })
+        if (!found) {
+          this.instanceData = _.reject(this.instanceData, {instanceId: instance.instanceId})
+        }
+      })
+    },
+
+    /**
+     * Sort Instances
+     */
+    doSort: function(field) {
+      if (!field) {
+        field = 'name'
+      }
+      if (field === this.sortKey) {
+        if (this.sortDir === 'asc') {
+          this.sortDir = 'desc'
+        } else {
+          this.sortDir = 'asc'
+        }
+      } else {
+        this.sortDir = 'asc'
+      }
+      this.sortKey = field
+      $('#regionHeaders i').removeClass('fa fa-caret-down fa-caret-up')
+      if (this.sortDir === 'asc') {
+        $('#regionHeaders #' + field + 'Sort').addClass('fa fa-caret-down')
+      } else {
+        $('#regionHeaders #' + field + 'Sort').addClass('fa fa-caret-up')
+      }
+      this.instanceData = _.orderBy(this.instanceData, [instance => instance[field].toLowerCase()], [this.sortDir])
+    },
+
+    /**
+     * Get data form Db
+     */
     getData: async function(cb) {
       this.org = await this.$db.orgs.cfindOne({ _id: this.orgId }).exec()
       this.awsRegion = await this.$db.awsRegions.cfindOne({_id: this.awsRegionId}).exec()
@@ -205,6 +262,8 @@ export default {
             instances.push(instance)
           })
           vue.instances = instances
+          vue.instanceData = vue.instances
+          vue.doSort()
         }
       })
     }
