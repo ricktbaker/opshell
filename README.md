@@ -8,6 +8,8 @@ This is still very early in the development phase.   It has some rough edges for
 
 It's built on electron and vue which at this point in time I have about 1 week experience with, so there are probably many things that can be done better, cleaner, etc.   I wanted to learn the electron/vue combo and wanted to make something useful in the process.
 
+Yes, the name is horrid, but it'll work for now until someone gives me a better idea.
+
 Primary Components:
 
 - Electron
