@@ -74,8 +74,6 @@ export default {
         subjectRow.style.display = '' // Revert style before calculating height, since they differ.
         characterHeight = subjectRow.getBoundingClientRect().height
         subjectRow.innerHTML = contentBuffer
-        console.log(characterHeight)
-        console.log(characterWidth)
 
         rows = parseInt(availableHeight / characterHeight) - 3
         cols = parseInt(availableWidth / characterWidth) - 5
