@@ -47,42 +47,45 @@ export default {
       } else {
         fontSize -= 1
       }
-      console.log(fontSize)
       $('#terminal' + this.tab + ' .terminal').css('font-size', fontSize + 'px')
+      this.resizeIt()
     },
     resizeIt: function() {
-      var term = this.term
-      var parentElementStyle = window.getComputedStyle(term.element.parentElement)
-      var parentElementHeight = parseInt(parentElementStyle.getPropertyValue('height'))
-      var parentElementWidth = Math.max(0, parseInt(parentElementStyle.getPropertyValue('width')) - 17)
-      var elementStyle = window.getComputedStyle(term.element)
-      var elementPaddingVer = parseInt(elementStyle.getPropertyValue('padding-top')) + parseInt(elementStyle.getPropertyValue('padding-bottom'))
-      var elementPaddingHor = parseInt(elementStyle.getPropertyValue('padding-right')) + parseInt(elementStyle.getPropertyValue('padding-left'))
-      var availableHeight = parentElementHeight - elementPaddingVer
-      var availableWidth = parentElementWidth - elementPaddingHor
-      var subjectRow = term.rowContainer.firstElementChild
-      var contentBuffer = subjectRow.innerHTML
-      var characterHeight
-      var rows
-      var characterWidth
-      var cols
-
-      subjectRow.style.display = 'inline'
-      subjectRow.innerHTML = 'W' // Common character for measuring width, although on monospace
-      characterWidth = subjectRow.getBoundingClientRect().width
-      subjectRow.style.display = '' // Revert style before calculating height, since they differ.
-      characterHeight = subjectRow.getBoundingClientRect().height
-      subjectRow.innerHTML = contentBuffer
-
-      rows = parseInt(availableHeight / characterHeight) - 2
-      cols = parseInt(availableWidth / characterWidth) - 5
-      if ($('#leftMenuExpanded').is(':visible')) {
-        cols = cols - 25
-      }
-
       try {
+        var term = this.term
+        var parentElementStyle = window.getComputedStyle(term.element.parentElement)
+        var parentElementHeight = parseInt(parentElementStyle.getPropertyValue('height'))
+        var parentElementWidth = Math.max(0, parseInt(parentElementStyle.getPropertyValue('width')) - 17)
+        var elementStyle = window.getComputedStyle(term.element)
+        var elementPaddingVer = parseInt(elementStyle.getPropertyValue('padding-top')) + parseInt(elementStyle.getPropertyValue('padding-bottom'))
+        var elementPaddingHor = parseInt(elementStyle.getPropertyValue('padding-right')) + parseInt(elementStyle.getPropertyValue('padding-left'))
+        var availableHeight = parentElementHeight - elementPaddingVer
+        var availableWidth = parentElementWidth - elementPaddingHor
+        var subjectRow = term.rowContainer.firstElementChild
+        var contentBuffer = subjectRow.innerHTML
+        var characterHeight
+        var rows
+        var characterWidth
+        var cols
+
+        subjectRow.style.display = 'inline'
+        subjectRow.innerHTML = 'W' // Common character for measuring width, although on monospace
+        characterWidth = subjectRow.getBoundingClientRect().width
+        subjectRow.style.display = '' // Revert style before calculating height, since they differ.
+        characterHeight = subjectRow.getBoundingClientRect().height
+        subjectRow.innerHTML = contentBuffer
+        console.log(characterHeight)
+        console.log(characterWidth)
+
+        rows = parseInt(availableHeight / characterHeight) - 3
+        cols = parseInt(availableWidth / characterWidth) - 5
+        if ($('#leftMenuExpanded').is(':visible')) {
+          cols = cols - 25
+        }
+
         term.resize(cols, rows)
-        this.ptyProcess.resize(this.ptyProcess.pid, cols, rows)
+        this.ptyProcess.resize(cols, rows)
+        console.log(cols, rows)
       } catch (err) {
         console.log(err)
       }

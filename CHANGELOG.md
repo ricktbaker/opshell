@@ -1,6 +1,11 @@
 # DevOps Helper Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.0.3] - 2017-09-30
+### Fixed
+- General UI fixes with selected options not showing selected by default
+- Fixed an issue with running processes such as vi or top within the terminal
+
 ## [0.0.2] - 2017-09-29
 ### Added
 - Ability to filter listed Instances by a search string
