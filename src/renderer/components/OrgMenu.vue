@@ -8,7 +8,7 @@
     </div>
     <div class="select">
       <select v-on:change="changeOrg" class="orgSelect" name="selectedOrg" v-model="selected._id">
-        <option value="">Select Organization</option>
+        <option value="" selected="selected">Select Organization</option>
         <option v-for="org in orgs" :value="org._id" :key="org._id">{{ org.name }}</option>
       </select>
     </div>
@@ -31,11 +31,6 @@
           {{awsRegion.region}}
         </div>
       </div>
-
-      <!--
-      <i class="fa fa-caret-right"></i> Servers
-      <span style="float: right">({{org.servers ? org.servers.length : 0}})</span>
-      -->
     </div>
   </div>
 </template>
@@ -52,7 +47,7 @@ export default {
       orgs: [],
       test: [],
       selected: {
-        _id: 'select'
+        _id: ''
       }
     }
   },

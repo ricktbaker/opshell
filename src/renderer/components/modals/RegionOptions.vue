@@ -16,7 +16,7 @@
             <div class="col-sm-4" v-if="useBastion">
               <select class="form-control input-sm" v-model="bastionHost">
                 <option value="">Select Bastion Host</option>
-                <option v-if="instance.publicIp" v-for="instance in instances" :value="instance" :key="instance.instanceId">{{ instance.name}} : {{ instance.publicIp }} </option>
+                <option v-if="instance.publicIp" v-for="instance in instances" :value="instance.instanceId" :key="instance.instanceId">{{ instance.name}} : {{ instance.publicIp }} </option>
               </select>
             </div>
             <div class="col-sm-4" v-if="useBastion">
