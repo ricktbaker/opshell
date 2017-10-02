@@ -6,7 +6,7 @@
 
 <script>
   export default {
-    name: 'devops_shell'
+    name: 'Opshell'
   }
 </script>
 
