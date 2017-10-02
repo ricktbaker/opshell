@@ -63,9 +63,9 @@
 </template>
 
 <script>
-import { ipcRenderer } from 'electron'
-import AWS from 'aws-sdk'
-import _ from 'lodash'
+import { ipcRenderer } from 'electron';
+import AWS from 'aws-sdk';
+import _ from 'lodash';
 export default {
   name: 'awsRegion',
   data: function() {
@@ -88,23 +88,23 @@ export default {
       tempData: [],
       sortKey: null,
       sortDir: null
-    }
+    };
   },
   mounted: function () {
     ipcRenderer.on('updateTabData', (e, data) => {
       if (data.tab === this.tab) {
-        this.getData()
+        this.getData();
       }
     })
     ipcRenderer.on('regionData', (e, data) => {
       if (this.rendered === false) {
-        this.tab = data.tab
-        this.awsRegionId = data.awsRegion
-        this.orgId = data.org
-        this.rendered = true
+        this.tab = data.tab;
+        this.awsRegionId = data.awsRegion;
+        this.orgId = data.org;
+        this.rendered = true;
         this.getData(() => {
           this.regionData()
-        })
+        });
       }
     })
   },
@@ -116,18 +116,18 @@ export default {
     instanceSearch: function() {
       const searchString = $('#instanceSearch').val()
       if (!searchString) {
-        this.instanceData = this.instances
-        return
+        this.instanceData = this.instances;
+        return;
       }
       _.each(this.instanceData, (instance) => {
-        let found = false
+        let found = false;
         _.each(instance, (val, key) => {
           if (_.includes(val, searchString)) {
-            found = true
+            found = true;
           }
         })
         if (!found) {
-          this.instanceData = _.reject(this.instanceData, {instanceId: instance.instanceId})
+          this.instanceData = _.reject(this.instanceData, {instanceId: instance.instanceId});
         }
       })
     },
@@ -137,57 +137,57 @@ export default {
      */
     doSort: function(field) {
       if (!field) {
-        field = 'name'
+        field = 'name';
       }
       if (field === this.sortKey) {
         if (this.sortDir === 'asc') {
-          this.sortDir = 'desc'
+          this.sortDir = 'desc';
         } else {
-          this.sortDir = 'asc'
+          this.sortDir = 'asc';
         }
       } else {
-        this.sortDir = 'asc'
+        this.sortDir = 'asc';
       }
-      this.sortKey = field
-      $('#regionHeaders i').removeClass('fa fa-caret-down fa-caret-up')
+      this.sortKey = field;
+      $('#regionHeaders i').removeClass('fa fa-caret-down fa-caret-up');
       if (this.sortDir === 'asc') {
-        $('#regionHeaders #' + field + 'Sort').addClass('fa fa-caret-down')
+        $('#regionHeaders #' + field + 'Sort').addClass('fa fa-caret-down');
       } else {
-        $('#regionHeaders #' + field + 'Sort').addClass('fa fa-caret-up')
+        $('#regionHeaders #' + field + 'Sort').addClass('fa fa-caret-up');
       }
-      this.instanceData = _.orderBy(this.instanceData, [instance => instance[field].toLowerCase()], [this.sortDir])
+      this.instanceData = _.orderBy(this.instanceData, [instance => instance[field].toLowerCase()], [this.sortDir]);
     },
 
     /**
      * Get data form Db
      */
     getData: async function(cb) {
-      this.org = await this.$db.orgs.cfindOne({ _id: this.orgId }).exec()
-      this.awsRegion = await this.$db.awsRegions.cfindOne({_id: this.awsRegionId}).exec()
-      const tempData = await this.$db.tempData.cfind({org: this.orgId, region: this.awsRegionId, type: 'region'}).exec()
-      this.tempData = new Map(tempData.map(element => [element.name, element]))
+      this.org = await this.$db.orgs.cfindOne({ _id: this.orgId }).exec();
+      this.awsRegion = await this.$db.awsRegions.cfindOne({_id: this.awsRegionId}).exec();
+      const tempData = await this.$db.tempData.cfind({org: this.orgId, region: this.awsRegionId, type: 'region'}).exec();
+      this.tempData = new Map(tempData.map(element => [element.name, element]));
       if (typeof (cb) === 'function') {
-        cb()
+        cb();
       }
     },
     regionSettings: function() {
-      ipcRenderer.send('regionSettings', {org: this.orgId, awsRegion: this.awsRegionId, instances: this.instances, tab: this.tab})
+      ipcRenderer.send('regionSettings', {org: this.orgId, awsRegion: this.awsRegionId, instances: this.instances, tab: this.tab});
     },
     toggleDetails: function(instanceId) {
       if ($('#tab' + this.tab + ' #caret' + instanceId).hasClass('fa-caret-right')) {
-        $('#tab' + this.tab + ' #' + instanceId).show()
-        $('#tab' + this.tab + ' #caret' + instanceId).removeClass('fa-caret-right').addClass('fa-caret-down')
+        $('#tab' + this.tab + ' #' + instanceId).show();
+        $('#tab' + this.tab + ' #caret' + instanceId).removeClass('fa-caret-right').addClass('fa-caret-down');
       } else {
-        $('#tab' + this.tab + ' #' + instanceId).hide()
-        $('#tab' + this.tab + ' #caret' + instanceId).removeClass('fa-caret-down').addClass('fa-caret-right')
+        $('#tab' + this.tab + ' #' + instanceId).hide();
+        $('#tab' + this.tab + ' #caret' + instanceId).removeClass('fa-caret-down').addClass('fa-caret-right');
       }
     },
     ssh: async function(instance) {
-      let bastionHost
+      let bastionHost;
       if ($('#sshBastion' + instance.instanceId).val()) {
         _.each(this.instances, (inst) => {
           if (this.awsRegion.bastionHost === inst.instanceId) {
-            bastionHost = inst
+            bastionHost = inst;
           }
         })
       }
@@ -200,7 +200,7 @@ export default {
         user: $('#sshUser' + instance.instanceId).val(),
         ip: $('#sshIp' + instance.instanceId).val(),
         bastionHost: bastionHost
-      }
+      };
       const newTemp = {
         instanceId: instance.instanceId,
         name: instance.name,
@@ -209,7 +209,7 @@ export default {
         type: 'region',
         user: data.user,
         ip: data.ip
-      }
+      };
       await this.$db.tempData.update(
         {
           org: this.orgId,
@@ -218,52 +218,52 @@ export default {
           instanceId: instance.instanceId
         },
         newTemp,
-        { upsert: true })
-      this.getData()
-      ipcRenderer.send('openTab', data)
+        { upsert: true });
+      this.getData();
+      ipcRenderer.send('openTab', data);
     },
     regionData: function() {
-      const vue = this
-      $('#regionError').hide()
-      $('#regionErrorMessage').html('')
+      const vue = this;
+      $('#regionError').hide();
+      $('#regionErrorMessage').html('');
 
       AWS.config.update({
         region: this.awsRegion.region,
         accessKeyId: this.awsRegion.accessKey,
         secretAccessKey: this.awsRegion.secretKey
-      })
+      });
 
-      const ec2 = new AWS.EC2()
+      const ec2 = new AWS.EC2();
       ec2.describeInstances(function(err, data) {
         if (err) {
-          $('#regionError').show()
-          $('#regionErrorMessage').html(err.message)
+          $('#regionError').show();
+          $('#regionErrorMessage').html(err.message);
         } else {
-          const instances = []
+          const instances = [];
           _.each(data.Reservations, (reservationData) => {
             const instance = {}
             _.each(reservationData.Instances, (instanceData) => {
-              instance.instanceId = instanceData.InstanceId
-              instance.instanceType = instanceData.InstanceType
-              instance.availabilityZone = instanceData.Placement.AvailabilityZone
-              instance.state = instanceData.State.Name
-              instance.publicIp = instanceData.PublicIpAddress
-              instance.privateIp = instanceData.PrivateIpAddress
-              instance.keyFile = instanceData.KeyName
+              instance.instanceId = instanceData.InstanceId;
+              instance.instanceType = instanceData.InstanceType;
+              instance.availabilityZone = instanceData.Placement.AvailabilityZone;
+              instance.state = instanceData.State.Name;
+              instance.publicIp = instanceData.PublicIpAddress;
+              instance.privateIp = instanceData.PrivateIpAddress;
+              instance.keyFile = instanceData.KeyName;
               _.each(instanceData.Tags, (tagData) => {
                 if (tagData.Key === 'Name') {
-                  instance.name = tagData.Value
+                  instance.name = tagData.Value;
                 }
               })
-              const tempData = vue.tempData.get(instance.name)
-              instance.defaultUser = tempData ? tempData.user : vue.awsRegion.defaultUser
-              instance.defaultIp = tempData ? tempData.ip : null
+              const tempData = vue.tempData.get(instance.name);
+              instance.defaultUser = tempData ? tempData.user : vue.awsRegion.defaultUser;
+              instance.defaultIp = tempData ? tempData.ip : null;
             })
-            instances.push(instance)
+            instances.push(instance);
           })
-          vue.instances = instances
-          vue.instanceData = vue.instances
-          vue.doSort()
+          vue.instances = instances;
+          vue.instanceData = vue.instances;
+          vue.doSort();
         }
       })
     }

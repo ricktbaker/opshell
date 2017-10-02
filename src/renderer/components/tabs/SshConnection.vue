@@ -15,13 +15,13 @@
   </div>
 </template>
 <<script>
-import * as Terminal from 'xterm'
-import { ipcRenderer } from 'electron'
-import os from 'os'
-import * as pty from 'node-pty'
-import path from 'path'
+import * as Terminal from 'xterm';
+import { ipcRenderer } from 'electron';
+import os from 'os';
+import * as pty from 'node-pty';
+import path from 'path';
 
-const {app} = require('electron').remote
+const {app} = require('electron').remote;
 // const Client = require('ssh2').Client
 
 export default {
@@ -37,69 +37,67 @@ export default {
       awsRegion: null,
       ptyProcess: null,
       instance: {}
-    }
+    };
   },
   methods: {
     fontSize: function(dir) {
-      let fontSize = parseInt($('#terminal' + this.tab + ' .terminal').css('font-size').replace(/px/, ''))
+      let fontSize = parseInt($('#terminal' + this.tab + ' .terminal').css('font-size').replace(/px/, ''));
       if (dir === '+') {
-        fontSize += 1
+        fontSize += 1;
       } else {
-        fontSize -= 1
+        fontSize -= 1;
       }
-      $('#terminal' + this.tab + ' .terminal').css('font-size', fontSize + 'px')
-      this.resizeIt()
+      $('#terminal' + this.tab + ' .terminal').css('font-size', fontSize + 'px');
+      this.resizeIt();
     },
     resizeIt: function() {
       try {
-        var term = this.term
-        var parentElementStyle = window.getComputedStyle(term.element.parentElement)
-        var parentElementHeight = parseInt(parentElementStyle.getPropertyValue('height'))
-        var parentElementWidth = Math.max(0, parseInt(parentElementStyle.getPropertyValue('width')) - 17)
-        var elementStyle = window.getComputedStyle(term.element)
-        var elementPaddingVer = parseInt(elementStyle.getPropertyValue('padding-top')) + parseInt(elementStyle.getPropertyValue('padding-bottom'))
-        var elementPaddingHor = parseInt(elementStyle.getPropertyValue('padding-right')) + parseInt(elementStyle.getPropertyValue('padding-left'))
-        var availableHeight = parentElementHeight - elementPaddingVer
-        var availableWidth = parentElementWidth - elementPaddingHor
-        var subjectRow = term.rowContainer.firstElementChild
-        var contentBuffer = subjectRow.innerHTML
-        var characterHeight
-        var rows
-        var characterWidth
-        var cols
+        var term = this.term;
+        var parentElementStyle = window.getComputedStyle(term.element.parentElement);
+        var parentElementHeight = parseInt(parentElementStyle.getPropertyValue('height'));
+        var parentElementWidth = Math.max(0, parseInt(parentElementStyle.getPropertyValue('width')) - 17);
+        var elementStyle = window.getComputedStyle(term.element);
+        var elementPaddingVer = parseInt(elementStyle.getPropertyValue('padding-top')) + parseInt(elementStyle.getPropertyValue('padding-bottom'));
+        var elementPaddingHor = parseInt(elementStyle.getPropertyValue('padding-right')) + parseInt(elementStyle.getPropertyValue('padding-left'));
+        var availableHeight = parentElementHeight - elementPaddingVer;
+        var availableWidth = parentElementWidth - elementPaddingHor;
+        var subjectRow = term.rowContainer.firstElementChild;
+        var contentBuffer = subjectRow.innerHTML;
+        var characterHeight;
+        var rows;
+        var characterWidth;
+        var cols;
 
-        subjectRow.style.display = 'inline'
-        subjectRow.innerHTML = 'W' // Common character for measuring width, although on monospace
-        characterWidth = subjectRow.getBoundingClientRect().width
-        subjectRow.style.display = '' // Revert style before calculating height, since they differ.
-        characterHeight = subjectRow.getBoundingClientRect().height
-        subjectRow.innerHTML = contentBuffer
+        subjectRow.style.display = 'inline';
+        subjectRow.innerHTML = 'W'; // Common character for measuring width, although on monospace
+        characterWidth = subjectRow.getBoundingClientRect().width;
+        subjectRow.style.display = ''; // Revert style before calculating height, since they differ.
+        characterHeight = subjectRow.getBoundingClientRect().height;
+        subjectRow.innerHTML = contentBuffer;
 
-        rows = parseInt(availableHeight / characterHeight) - 3
-        cols = parseInt(availableWidth / characterWidth) - 5
+        rows = parseInt(availableHeight / characterHeight) - 3;
+        cols = parseInt(availableWidth / characterWidth) - 5;
         if ($('#leftMenuExpanded').is(':visible')) {
-          cols = cols - 25
+          cols = cols - 25;
         }
 
-        term.resize(cols, rows)
-        this.ptyProcess.resize(cols, rows)
-        console.log(cols, rows)
+        term.resize(cols, rows);
+        this.ptyProcess.resize(cols, rows);
       } catch (err) {
-        console.log(err)
+        console.log(err);
       }
-      this.term.refresh(0, 200)
+      this.term.refresh(0, 200);
     },
     ssh: async function (server) {
-      const vue = this
+      const vue = this;
       this.term = new Terminal({
-      })
-      Terminal.loadAddon('fit')
-      this.term.open(document.getElementById('terminal' + this.tab), true)
-      this.term._initialized = true
+      });
+      this.term.open(document.getElementById('terminal' + this.tab), true);
+      this.term._initialized = true;
 
-      const appData = app.getPath('home')
-      const keyPath = path.join(appData, '.opshell', this.org.name, this.awsRegion.region, server.instance.keyFile).replace(/\s+/g, '-')
-      var shell = os.platform() === 'win32' ? 'powershell.exe' : 'bash'
+      const appData = app.getPath('home');
+      const keyPath = path.join(appData, '.opshell', this.org.name, this.awsRegion.region, server.instance.keyFile).replace(/\s+/g, '-');
+      var shell = os.platform() === 'win32' ? 'powershell.exe' : 'bash';
 
       this.ptyProcess = pty.spawn(shell, [], {
         name: 'xterm-color',
@@ -107,28 +105,28 @@ export default {
         rows: 10,
         cwd: process.env.HOME,
         env: process.env
-      })
+      });
 
       if (!server.bastionHost) {
-        const serverCommand = 'ssh -o "UserKnownHostsFile /dev/null" -o StrictHostKeyChecking=no -i ' + keyPath + ' -l ' + server.user + ' ' + server.ip
-        this.ptyProcess.write(serverCommand + '\r\n')
+        const serverCommand = 'ssh -o "UserKnownHostsFile /dev/null" -o StrictHostKeyChecking=no -i ' + keyPath + ' -l ' + server.user + ' ' + server.ip;
+        this.ptyProcess.write(serverCommand + '\r\n');
       } else {
-        const bastionKeyPath = path.join(appData, '.opshell', this.org.name, this.awsRegion.region, server.bastionHost.keyFile).replace(/\s+/g, '-')
-        const bastionCommand = 'ssh -t -o "UserKnownHostsFile /dev/null" -o StrictHostKeyChecking=no -o ProxyCommand=\'ssh -i ' + bastionKeyPath + ' -l ' + this.awsRegion.bastionUser + ' ' + server.bastionHost.publicIp + ' nc %h %p\' -i ' + keyPath + ' -l ' + server.user + ' ' + server.ip
-        this.ptyProcess.write(bastionCommand + '\r\n')
+        const bastionKeyPath = path.join(appData, '.opshell', this.org.name, this.awsRegion.region, server.bastionHost.keyFile).replace(/\s+/g, '-');
+        const bastionCommand = 'ssh -t -o "UserKnownHostsFile /dev/null" -o StrictHostKeyChecking=no -o ProxyCommand=\'ssh -i ' + bastionKeyPath + ' -l ' + this.awsRegion.bastionUser + ' ' + server.bastionHost.publicIp + ' nc %h %p\' -i ' + keyPath + ' -l ' + server.user + ' ' + server.ip;
+        this.ptyProcess.write(bastionCommand + '\r\n');
       }
       this.ptyProcess.on('data', function(data) {
-        vue.term.write(data)
+        vue.term.write(data);
       })
 
       vue.term.on('data', function(data) {
-        vue.ptyProcess.write(data)
+        vue.ptyProcess.write(data);
       })
 
       // This is hacky.   I can't figure out an event to know when to do this resize
       // so just going to wait a couple of seconds for now
       setTimeout(() => {
-        this.resizeIt()
+        this.resizeIt();
       }, 2000)
 
       /*
@@ -165,20 +163,20 @@ export default {
     }
   },
   beforeDestroy () {
-    this.term.destroy()
+    this.term.destroy();
   },
   mounted: function() {
     ipcRenderer.on('resize', () => {
-      this.resizeIt()
+      this.resizeIt();
     })
     ipcRenderer.on('doSsh', async (e, server) => {
       if (this.rendered === false) {
-        this.instance = server.instance
-        this.rendered = true
-        this.org = await this.$db.orgs.cfindOne({ _id: server.org }).exec()
-        this.awsRegion = await this.$db.awsRegions.cfindOne({_id: server.awsRegion}).exec()
-        this.ssh(server)
-        this.tab = server.tab
+        this.instance = server.instance;
+        this.rendered = true;
+        this.org = await this.$db.orgs.cfindOne({ _id: server.org }).exec();
+        this.awsRegion = await this.$db.awsRegions.cfindOne({_id: server.awsRegion}).exec();
+        this.ssh(server);
+        this.tab = server.tab;
       }
     })
   }

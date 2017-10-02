@@ -33,24 +33,24 @@ import { ipcRenderer } from 'electron'
 export default {
   name: 'newOrgModal',
   mounted: function() {
-    $('.modal-footer').hide()
+    $('.modal-footer').hide();
   },
   methods: {
     async add() {
-      $('.modal-footer').hide()
-      const docs = await this.$db.orgs.cfind({ name: $('#orgName').val() }).exec()
+      $('.modal-footer').hide();
+      const docs = await this.$db.orgs.cfind({ name: $('#orgName').val() }).exec();
       if (docs.length < 1) {
         let doc = {
           name: $('#orgName').val(),
           aws: [
           ]
-        }
-        const newDoc = await this.$db.orgs.insert(doc)
-        ipcRenderer.send('updateOrgSelect')
-        $('#addOrgModal').modal('hide')
-        ipcRenderer.send('orgSettings', newDoc._id)
+        };
+        const newDoc = await this.$db.orgs.insert(doc);
+        ipcRenderer.send('updateOrgSelect');
+        $('#addOrgModal').modal('hide');
+        ipcRenderer.send('orgSettings', newDoc._id);
       } else {
-        $('.modal-footer').show()
+        $('.modal-footer').show();
       }
     }
   }

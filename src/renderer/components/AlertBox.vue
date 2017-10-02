@@ -9,10 +9,10 @@ import { ipcRenderer } from 'electron'
 export default {
   name: 'alertBox',
   mounted: function() {
-    $('#alertBox').hide()
+    $('#alertBox').hide();
     ipcRenderer.on('showAlert', (e, msg) => {
-      $('#alertBox #msg').html(msg)
-      $('#alertBox').show()
+      $('#alertBox #msg').html(msg);
+      $('#alertBox').show();
     })
   },
   methods: {

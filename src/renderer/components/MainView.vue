@@ -39,9 +39,9 @@
 
 <script>
 
-import { ipcRenderer } from 'electron'
-import AwsRegion from './tabs/AwsRegion.vue'
-import SshConnection from './tabs/SshConnection.vue'
+import { ipcRenderer } from 'electron';
+import AwsRegion from './tabs/AwsRegion.vue';
+import SshConnection from './tabs/SshConnection.vue';
 
 export default {
   name: 'mainView',
@@ -50,38 +50,38 @@ export default {
       tabs: [],
       tabCount: 0,
       type: null
-    }
+    };
   },
   mounted: function() {
     ipcRenderer.on('openTab', async (e, data) => {
-      const org = await this.$db.orgs.cfindOne({ _id: data.org }).exec()
-      const awsRegion = await this.$db.awsRegions.cfindOne({_id: data.awsRegion}).exec()
+      const org = await this.$db.orgs.cfindOne({ _id: data.org }).exec();
+      const awsRegion = await this.$db.awsRegions.cfindOne({_id: data.awsRegion}).exec();
       const obj = {
         id: this.tabCount,
         type: data.type,
         tab: this.tabCount
-      }
+      };
       if (data.type === 'awsRegion') {
-        obj.org = org.name
-        obj.name = awsRegion.region
-        obj.icon = 'fa-cloud'
+        obj.org = org.name;
+        obj.name = awsRegion.region;
+        obj.icon = 'fa-cloud';
       } else if (data.type === 'ssh') {
-        obj.org = org.name
-        obj.name = data.instance.name
-        obj.icon = 'fa-server'
+        obj.org = org.name;
+        obj.name = data.instance.name;
+        obj.icon = 'fa-server';
       }
-      this.tabs.push(obj)
+      this.tabs.push(obj);
       setTimeout(() => {
-        $('.nav-tabs a:last').tab('show')
-      }, 1000)
+        $('.nav-tabs a:last').tab('show');
+      }, 1000);
 
-      data.tab = this.tabCount
-      this.tabCount += 1
+      data.tab = this.tabCount;
+      this.tabCount += 1;
 
       if (data.type === 'awsRegion') {
-        ipcRenderer.send('regionData', data)
+        ipcRenderer.send('regionData', data);
       } else if (data.type === 'ssh') {
-        ipcRenderer.send('doSsh', data)
+        ipcRenderer.send('doSsh', data);
       }
     })
   },
@@ -91,15 +91,15 @@ export default {
   methods: {
     closeTab: function(tabId) {
       if (this.tabs.length === 1) {
-        this.tabs = []
+        this.tabs = [];
       } else {
         this.tabs = this.tabs.filter(function(tab) {
-          return tab.id !== tabId
+          return tab.id !== tabId;
         })
       }
       setTimeout(() => {
-        $('.nav-tabs a:last').tab('show')
-      }, 1000)
+        $('.nav-tabs a:last').tab('show');
+      }, 1000);
     }
   }
 }

@@ -5,18 +5,18 @@
   </div>
 </template>
 <script>
-import { ipcRenderer } from 'electron'
+import { ipcRenderer } from 'electron';
 export default {
   name: 'leftMenu',
   methods: {
     toggleOrg() {
-      $('#leftMenuExpanded').toggle()
+      $('#leftMenuExpanded').toggle();
       if ($('#leftMenuExpanded').is(':visible')) {
-        $('#mainView').css('padding-left', '245px')
+        $('#mainView').css('padding-left', '245px');
       } else {
-        $('#mainView').css('padding-left', '45px')
+        $('#mainView').css('padding-left', '45px');
       }
-      ipcRenderer.send('orgMenuToggle')
+      ipcRenderer.send('orgMenuToggle');
     }
   }
 }

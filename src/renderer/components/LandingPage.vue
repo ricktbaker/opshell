@@ -12,22 +12,22 @@
   </div>
 </template>
 <script>
-import AlertBox from './AlertBox.vue'
-import LeftMenu from './LeftMenu'
-import OrgMenu from './OrgMenu'
-import NewOrgModal from './modals/NewOrgModal.vue'
-import OrgSettingsModal from './modals/OrgSettings.vue'
-import RegionSettingsModal from './modals/RegionOptions.vue'
-import MainView from './MainView.vue'
-import { ipcRenderer } from 'electron'
+import AlertBox from './AlertBox.vue';
+import LeftMenu from './LeftMenu';
+import OrgMenu from './OrgMenu';
+import NewOrgModal from './modals/NewOrgModal.vue';
+import OrgSettingsModal from './modals/OrgSettings.vue';
+import RegionSettingsModal from './modals/RegionOptions.vue';
+import MainView from './MainView.vue';
+import { ipcRenderer } from 'electron';
 
 export default {
   name: 'landing-page',
   mounted: async function() {
-    ipcRenderer.send('updateOrgSelect')
+    ipcRenderer.send('updateOrgSelect');
     const orgCheck = await this.$db.orgs.ccount().exec()
     if (!orgCheck || orgCheck < 1) {
-      $('#addOrgModal').modal('show')
+      $('#addOrgModal').modal('show');
     }
   },
   components: {

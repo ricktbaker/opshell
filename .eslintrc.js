@@ -27,5 +27,6 @@ module.exports = {
     "space-before-function-paren": 0,
     "no-octal": "off",
     "no-octal-escape": "off",
+    "semi": [2, "always"]
   }
 }

@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import { ipcRenderer } from 'electron'
+import { ipcRenderer } from 'electron';
 
 export default {
   name: 'regionOptions',
@@ -57,33 +57,33 @@ export default {
         'centos',
         'root'
       ]
-    }
+    };
   },
   mounted: function() {
     ipcRenderer.on('regionSettings', async (e, data) => {
-      this.tab = data.tab
-      this.org = await this.$db.orgs.cfindOne({ _id: data.org }).exec()
-      this.awsRegion = await this.$db.awsRegions.cfindOne({_id: data.awsRegion}).exec()
+      this.tab = data.tab;
+      this.org = await this.$db.orgs.cfindOne({ _id: data.org }).exec();
+      this.awsRegion = await this.$db.awsRegions.cfindOne({_id: data.awsRegion}).exec();
       if (!this.awsRegion.useBastion) {
-        this.awsRegion.useBastion = false
+        this.awsRegion.useBastion = false;
       }
-      this.bastionHost = this.awsRegion.bastionHost
-      this.bastionUser = this.awsRegion.bastionUser
-      this.useBastion = this.awsRegion.useBastion
-      this.instances = data.instances
-      $('#regionOptions').modal('show')
-    })
+      this.bastionHost = this.awsRegion.bastionHost;
+      this.bastionUser = this.awsRegion.bastionUser;
+      this.useBastion = this.awsRegion.useBastion;
+      this.instances = data.instances;
+      $('#regionOptions').modal('show');
+    });
   },
   methods: {
     updateRegion: async function() {
-      this.awsRegion.useBastion = this.useBastion
-      this.awsRegion.bastionHost = this.bastionHost.instanceId
-      this.awsRegion.bastionUser = this.bastionUser
-      await this.$db.awsRegions.update({_id: this.awsRegion._id}, this.awsRegion)
-      ipcRenderer.send('updateTabData', {tab: this.tab})
+      this.awsRegion.useBastion = this.useBastion;
+      this.awsRegion.bastionHost = this.bastionHost.instanceId;
+      this.awsRegion.bastionUser = this.bastionUser;
+      await this.$db.awsRegions.update({_id: this.awsRegion._id}, this.awsRegion);
+      ipcRenderer.send('updateTabData', {tab: this.tab});
     },
     closeRegionOptions: function() {
-      $('#regionOptions').modal('hide')
+      $('#regionOptions').modal('hide');
     }
   }
 }

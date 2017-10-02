@@ -35,8 +35,8 @@
   </div>
 </template>
 <script>
-import _ from 'lodash'
-import { ipcRenderer } from 'electron'
+import _ from 'lodash';
+import { ipcRenderer } from 'electron';
 
 export default {
   name: 'orgMenu',
@@ -49,65 +49,65 @@ export default {
       selected: {
         _id: ''
       }
-    }
+    };
   },
   mounted: function() {
-    $('#leftMenuExpanded').hide()
-    ipcRenderer.on('updateOrgSelect', this.updateOrgs)
-    ipcRenderer.on('updateMenuOrg', this.changeOrg)
-    $('#orgDetails').hide()
-    $('#awsRegionContent').hide()
+    $('#leftMenuExpanded').hide();
+    ipcRenderer.on('updateOrgSelect', this.updateOrgs);
+    ipcRenderer.on('updateMenuOrg', this.changeOrg);
+    $('#orgDetails').hide();
+    $('#awsRegionContent').hide();
   },
   methods: {
     openTab: function(type, value) {
-      const data = {}
+      const data = {};
       if (type === 'awsRegion') {
-        data.org = this.org._id
-        data.type = type
-        data.awsRegion = value
-        ipcRenderer.send('openTab', data)
+        data.org = this.org._id;
+        data.type = type;
+        data.awsRegion = value;
+        ipcRenderer.send('openTab', data);
       }
     },
     toggleCaret: function(type, close) {
       if ($('#' + type + 'Caret').hasClass('fa-caret-right') && !close) {
-        $('#' + type + 'Caret').removeClass('fa-caret-right').addClass('fa-caret-down')
-        $('#' + type + 'Content').show()
+        $('#' + type + 'Caret').removeClass('fa-caret-right').addClass('fa-caret-down');
+        $('#' + type + 'Content').show();
       } else {
-        $('#' + type + 'Caret').removeClass('fa-caret-down').addClass('fa-caret-right')
-        $('#' + type + 'Content').hide()
+        $('#' + type + 'Caret').removeClass('fa-caret-down').addClass('fa-caret-right');
+        $('#' + type + 'Content').hide();
       }
     },
     orgSettings: function() {
-      ipcRenderer.send('orgSettings', this.selected._id)
+      ipcRenderer.send('orgSettings', this.selected._id);
     },
     changeOrg: async function() {
       if (this.selected._id !== 'select') {
         try {
-          this.org = await this.$db.orgs.cfindOne({ _id: this.selected._id }).exec()
-          this.awsRegions = await this.$db.awsRegions.cfind({org: this.org._id}).exec()
-          $('#orgDetails').show()
+          this.org = await this.$db.orgs.cfindOne({ _id: this.selected._id }).exec();
+          this.awsRegions = await this.$db.awsRegions.cfind({org: this.org._id}).exec();
+          $('#orgDetails').show();
         } catch (err) {
-          console.log(err)
+          console.log(err);
         }
       } else {
-        $('#orgDetails').hide()
+        $('#orgDetails').hide();
       }
     },
     updateOrgs: async function() {
       try {
-        const docs = await this.$db.orgs.cfind().sort({ name: 1 }).exec()
+        const docs = await this.$db.orgs.cfind().sort({ name: 1 }).exec();
         if (docs.length > 0) {
-          this.orgs = []
+          this.orgs = [];
           _.each(docs, (org) => {
             const minimal = {
               _id: org._id,
               name: org.name
-            }
-            this.orgs.push(minimal)
+            };
+            this.orgs.push(minimal);
           })
         }
       } catch (err) {
-        console.log(err)
+        console.log(err);
       }
     }
   }
