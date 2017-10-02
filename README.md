@@ -1,6 +1,6 @@
 <div align="center">
 <br />
-<img align="center" src="logo.png" alt="DevOps Helper">
+<img align="center" src="opshell.png" alt="Opshell">
 <br>
 <br>
 </div>
@@ -10,8 +10,6 @@ This is my current pet project which is meant to help those that work with a num
 This is still very early in the development phase.   It has some rough edges for sure.   It has been developed on a Mac, so your mileage may vary on other platforms.
 
 It's built on electron and vue which at this point in time I have about 1 week experience with, so there are probably many things that can be done better, cleaner, etc.   I wanted to learn the electron/vue combo and wanted to make something useful in the process.
-
-Yes, the name is horrid, but it'll work for now until someone gives me a better idea.
 
 Primary Components:
 
