@@ -1,6 +1,10 @@
 # Opshell Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.0.4] - 2017-09-02
+### Changed
+- Renamed to Opshell, which changes file and db storage locations.  No migration for this, since it's only been publically available for a couple of days.
+
 ## [0.0.3] - 2017-09-30
 ### Fixed
 - General UI fixes with selected options not showing selected by default

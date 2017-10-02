@@ -98,7 +98,7 @@ export default {
       this.term._initialized = true
 
       const appData = app.getPath('home')
-      const keyPath = path.join(appData, '.devops_helper', this.org.name, this.awsRegion.region, server.instance.keyFile).replace(/\s+/g, '-')
+      const keyPath = path.join(appData, '.opshell', this.org.name, this.awsRegion.region, server.instance.keyFile).replace(/\s+/g, '-')
       var shell = os.platform() === 'win32' ? 'powershell.exe' : 'bash'
 
       this.ptyProcess = pty.spawn(shell, [], {
@@ -113,7 +113,7 @@ export default {
         const serverCommand = 'ssh -o "UserKnownHostsFile /dev/null" -o StrictHostKeyChecking=no -i ' + keyPath + ' -l ' + server.user + ' ' + server.ip
         this.ptyProcess.write(serverCommand + '\r\n')
       } else {
-        const bastionKeyPath = path.join(appData, '.devops_helper', this.org.name, this.awsRegion.region, server.bastionHost.keyFile).replace(/\s+/g, '-')
+        const bastionKeyPath = path.join(appData, '.opshell', this.org.name, this.awsRegion.region, server.bastionHost.keyFile).replace(/\s+/g, '-')
         const bastionCommand = 'ssh -t -o "UserKnownHostsFile /dev/null" -o StrictHostKeyChecking=no -o ProxyCommand=\'ssh -i ' + bastionKeyPath + ' -l ' + this.awsRegion.bastionUser + ' ' + server.bastionHost.publicIp + ' nc %h %p\' -i ' + keyPath + ' -l ' + server.user + ' ' + server.ip
         this.ptyProcess.write(bastionCommand + '\r\n')
       }

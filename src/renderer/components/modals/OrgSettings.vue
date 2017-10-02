@@ -246,7 +246,7 @@ export default {
         var files = e.target.files || e.dataTransfer.files
         if (!files.length) return
         const appData = app.getPath('home')
-        const dirPath = path.join(appData, '.devops_helper', this.org.name, awsRegion.region).replace(/\s+/g, '-')
+        const dirPath = path.join(appData, '.opshell', this.org.name, awsRegion.region).replace(/\s+/g, '-')
         const fullPath = path.join(dirPath, keyName)
         const data = await fs.readFile(files[0].path)
         await fs.ensureDir(dirPath)
