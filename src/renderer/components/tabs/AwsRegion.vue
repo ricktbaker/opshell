@@ -95,7 +95,7 @@ export default {
       if (data.tab === this.tab) {
         this.getData();
       }
-    })
+    });
     ipcRenderer.on('regionData', (e, data) => {
       if (this.rendered === false) {
         this.tab = data.tab;
@@ -103,10 +103,10 @@ export default {
         this.orgId = data.org;
         this.rendered = true;
         this.getData(() => {
-          this.regionData()
+          this.regionData();
         });
       }
-    })
+    });
   },
   methods: {
 
@@ -114,7 +114,7 @@ export default {
      * Search Instances
      */
     instanceSearch: function() {
-      const searchString = $('#instanceSearch').val()
+      const searchString = $('#instanceSearch').val();
       if (!searchString) {
         this.instanceData = this.instances;
         return;
@@ -125,11 +125,11 @@ export default {
           if (_.includes(val, searchString)) {
             found = true;
           }
-        })
+        });
         if (!found) {
           this.instanceData = _.reject(this.instanceData, {instanceId: instance.instanceId});
         }
-      })
+      });
     },
 
     /**
@@ -189,7 +189,7 @@ export default {
           if (this.awsRegion.bastionHost === inst.instanceId) {
             bastionHost = inst;
           }
-        })
+        });
       }
       const data = {
         type: 'ssh',
@@ -241,7 +241,7 @@ export default {
         } else {
           const instances = [];
           _.each(data.Reservations, (reservationData) => {
-            const instance = {}
+            const instance = {};
             _.each(reservationData.Instances, (instanceData) => {
               instance.instanceId = instanceData.InstanceId;
               instance.instanceType = instanceData.InstanceType;
@@ -254,21 +254,21 @@ export default {
                 if (tagData.Key === 'Name') {
                   instance.name = tagData.Value;
                 }
-              })
+              });
               const tempData = vue.tempData.get(instance.name);
               instance.defaultUser = tempData ? tempData.user : vue.awsRegion.defaultUser;
               instance.defaultIp = tempData ? tempData.ip : null;
-            })
+            });
             instances.push(instance);
-          })
+          });
           vue.instances = instances;
           vue.instanceData = vue.instances;
           vue.doSort();
         }
-      })
+      });
     }
   }
-}
+};
 </script>
 <style>
 @import '../../assets/css/awsregion.css'

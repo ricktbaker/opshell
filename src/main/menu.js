@@ -1,6 +1,6 @@
-const {Menu} = require('electron')
-const electron = require('electron')
-const app = electron.app
+const {Menu} = require('electron');
+const electron = require('electron');
+const app = electron.app;
 
 const template = [
   {
@@ -22,14 +22,14 @@ const template = [
         label: 'Reload',
         accelerator: 'CmdOrCtrl+R',
         click (item, focusedWindow) {
-          if (focusedWindow) focusedWindow.reload()
+          if (focusedWindow) focusedWindow.reload();
         }
       },
       {
         label: 'Toggle Developer Tools',
         accelerator: process.platform === 'darwin' ? 'Alt+Command+I' : 'Ctrl+Shift+I',
         click (item, focusedWindow) {
-          if (focusedWindow) focusedWindow.webContents.toggleDevTools()
+          if (focusedWindow) focusedWindow.webContents.toggleDevTools();
         }
       },
       {
@@ -68,14 +68,14 @@ const template = [
     submenu: [
       {
         label: 'Learn More',
-        click () { require('electron').shell.openExternal('http://electron.atom.io') }
+        click () { require('electron').shell.openExternal('http://electron.atom.io'); }
       }
     ]
   }
-]
+];
 
 if (process.platform === 'darwin') {
-  const name = app.getName()
+  const name = app.getName();
   template.unshift({
     label: name,
     submenu: [
@@ -108,7 +108,7 @@ if (process.platform === 'darwin') {
         role: 'quit'
       }
     ]
-  })
+  });
   // Window menu.
   template[3].submenu = [
     {
@@ -129,7 +129,7 @@ if (process.platform === 'darwin') {
       label: 'Toggle Developer Tools',
       accelerator: process.platform === 'darwin' ? 'Alt+Command+I' : 'Ctrl+Shift+I',
       click (item, focusedWindow) {
-        if (focusedWindow) focusedWindow.webContents.toggleDevTools()
+        if (focusedWindow) focusedWindow.webContents.toggleDevTools();
       }
     },
     {
@@ -139,8 +139,8 @@ if (process.platform === 'darwin') {
       label: 'Bring All to Front',
       role: 'front'
     }
-  ]
+  ];
 }
 
-const menu = Menu.buildFromTemplate(template)
-Menu.setApplicationMenu(menu)
+const menu = Menu.buildFromTemplate(template);
+Menu.setApplicationMenu(menu);

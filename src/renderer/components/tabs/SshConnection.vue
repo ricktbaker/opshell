@@ -117,17 +117,17 @@ export default {
       }
       this.ptyProcess.on('data', function(data) {
         vue.term.write(data);
-      })
+      });
 
       vue.term.on('data', function(data) {
         vue.ptyProcess.write(data);
-      })
+      });
 
       // This is hacky.   I can't figure out an event to know when to do this resize
       // so just going to wait a couple of seconds for now
       setTimeout(() => {
         this.resizeIt();
-      }, 2000)
+      }, 2000);
 
       /*
       var conn = new Client()
@@ -168,7 +168,7 @@ export default {
   mounted: function() {
     ipcRenderer.on('resize', () => {
       this.resizeIt();
-    })
+    });
     ipcRenderer.on('doSsh', async (e, server) => {
       if (this.rendered === false) {
         this.instance = server.instance;
@@ -178,9 +178,9 @@ export default {
         this.ssh(server);
         this.tab = server.tab;
       }
-    })
+    });
   }
-}
+};
 </script>
 <style>
 @import '../../assets/css/sshconnection.css'

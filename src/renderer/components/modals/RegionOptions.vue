@@ -86,7 +86,7 @@ export default {
       $('#regionOptions').modal('hide');
     }
   }
-}
+};
 </script>
 
 <style>

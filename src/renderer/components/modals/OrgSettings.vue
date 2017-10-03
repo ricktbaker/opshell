@@ -285,7 +285,7 @@ export default {
       $('#check' + awsRegion.region).show();
       setTimeout(function() {
         $('#check' + awsRegion.region).fadeOut('slow');
-      }, 2000)
+      }, 2000);
     },
     toggleCaret: function(type, force) {
       if (($('#' + type + 'SettingsCaret').hasClass('fa-caret-right') && force !== 'close') || force === 'open') {
@@ -329,19 +329,19 @@ export default {
               if (!_.includes(awsRegion.keys, instanceData.KeyName)) {
                 const found = awsRegion.keys.some(function(el) {
                   if (instanceData.KeyName === el.keyName) return true;
-                })
+                });
                 if (!found) {
                   awsRegion.keys.push({ keyName: instanceData.KeyName, value: null });
                 }
               }
-            })
+            });
           });
           await vue.$db.awsRegions.update({ _id: awsRegion._id }, awsRegion);
           this.awsRegion = awsRegion;
           ipcRenderer.send('orgSettings', vue.org._id);
           $('#scan' + awsRegion.region).hide();
         }
-      })
+      });
     },
     addAWSRegion: async function() {
       const awsRegion = $('#awsRegionId').val();
@@ -377,7 +377,7 @@ export default {
       this.toggleCaret('awsRegion', 'close');
     }
   }
-}
+};
 </script>
 
 <style>

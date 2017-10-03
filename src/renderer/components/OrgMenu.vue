@@ -104,14 +104,14 @@ export default {
               name: org.name
             };
             this.orgs.push(minimal);
-          })
+          });
         }
       } catch (err) {
         console.log(err);
       }
     }
   }
-}
+};
 </script>
 
 

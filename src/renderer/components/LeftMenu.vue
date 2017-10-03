@@ -1,7 +1,9 @@
 <template>
   <div class="col" id="left-menu">
     <i v-on:click="toggleOrg" class="fa fa-building-o fa-lg" style="color: white; cursor: pointer" title="Organizations"></i>
-    </a>
+    <!-- <br />
+    <i class="fa fa-cloud-download fa-lg" title="Cloud Settings" />
+    -->
   </div>
 </template>
 <script>
@@ -19,7 +21,7 @@ export default {
       ipcRenderer.send('orgMenuToggle');
     }
   }
-}
+};
 </script>
 
 <style>

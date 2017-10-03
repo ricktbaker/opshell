@@ -25,7 +25,7 @@ export default {
   name: 'landing-page',
   mounted: async function() {
     ipcRenderer.send('updateOrgSelect');
-    const orgCheck = await this.$db.orgs.ccount().exec()
+    const orgCheck = await this.$db.orgs.ccount().exec();
     if (!orgCheck || orgCheck < 1) {
       $('#addOrgModal').modal('show');
     }
@@ -35,7 +35,7 @@ export default {
   },
   methods: {
   }
-}
+};
 </script>
 <style>
 @import url('https://fonts.googleapis.com/css?family=Source+Code+Pro:200,300,400,500,600');

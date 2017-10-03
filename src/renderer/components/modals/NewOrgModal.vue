@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import { ipcRenderer } from 'electron'
+import { ipcRenderer } from 'electron';
 export default {
   name: 'newOrgModal',
   mounted: function() {
@@ -54,5 +54,5 @@ export default {
       }
     }
   }
-}
+};
 </script>

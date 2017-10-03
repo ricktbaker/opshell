@@ -30,6 +30,10 @@ Primary Components:
 # install dependencies
 yarn
 
+# rebuild native modules
+yarn add electron-rebuild --dev
+./node_modules/.bin/electron-rebuild
+
 # serve with hot reload at localhost:9080
 yarn run dev
 

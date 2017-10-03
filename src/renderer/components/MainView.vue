@@ -83,7 +83,7 @@ export default {
       } else if (data.type === 'ssh') {
         ipcRenderer.send('doSsh', data);
       }
-    })
+    });
   },
   components: {
     AwsRegion, SshConnection
@@ -95,14 +95,14 @@ export default {
       } else {
         this.tabs = this.tabs.filter(function(tab) {
           return tab.id !== tabId;
-        })
+        });
       }
       setTimeout(() => {
         $('.nav-tabs a:last').tab('show');
       }, 1000);
     }
   }
-}
+};
 </script>
 <style>
 @import '../assets/css/mainview.css'

@@ -1,6 +1,6 @@
-import Datastore from 'nedb-promise'
-import path from 'path'
-import { remote } from 'electron'
+import Datastore from 'nedb-promise';
+import path from 'path';
+import { remote } from 'electron';
 
 export default ({
   orgs: new Datastore({
@@ -15,4 +15,4 @@ export default ({
     autoload: true,
     filename: path.join(remote.app.getPath('userData'), '/temp.db')
   })
-})
+});
