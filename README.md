@@ -7,9 +7,7 @@
 
 This is my current pet project which is meant to help those that work with a number of AWS accounts.   Always having to login to the console to find the server you want to connect to, if you need to use a bastion host, what key you need to use, etc.
 
-This is still very early in the development phase.   It has some rough edges for sure.   It has been developed on a Mac, so your mileage may vary on other platforms.
-
-It's built on electron and vue which at this point in time I have about 1 week experience with, so there are probably many things that can be done better, cleaner, etc.   I wanted to learn the electron/vue combo and wanted to make something useful in the process.
+This is still very early in the development phase.   It has some rough edges for sure.   It has been developed on a Mac, so your mileage may vary on other platforms.  Currently there are no built downloads available.  Once I get to a good solid base I will try and make Mac and Windows downloadables available.   For now, if you have node installed, then you should be able to run/build on your own.
 
 Primary Components:
 

@@ -9,6 +9,7 @@
     <newOrgModal></newOrgModal>
     <orgSettingsModal></orgSettingsModal>
     <regionSettingsModal></regionSettingsModal>
+    <cloudSettings></cloudSettings>
   </div>
 </template>
 <script>
@@ -19,6 +20,7 @@ import NewOrgModal from './modals/NewOrgModal.vue';
 import OrgSettingsModal from './modals/OrgSettings.vue';
 import RegionSettingsModal from './modals/RegionOptions.vue';
 import MainView from './MainView.vue';
+import CloudSettings from './modals/CloudSettings.vue';
 import { ipcRenderer } from 'electron';
 
 export default {
@@ -31,7 +33,7 @@ export default {
     }
   },
   components: {
-    LeftMenu, OrgMenu, NewOrgModal, AlertBox, OrgSettingsModal, MainView, RegionSettingsModal
+    LeftMenu, OrgMenu, NewOrgModal, AlertBox, OrgSettingsModal, MainView, RegionSettingsModal, CloudSettings
   },
   methods: {
   }
