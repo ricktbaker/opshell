@@ -24,14 +24,25 @@ Primary Components:
 [View the Current ChangeLog](CHANGELOG.md)
 
 
-#### Build Setup
+#### Build Setup for Mac/Linux
+``` bash
+# install dependencies and native modules
+./do_install.sh
+
+# serve with hot reload at localhost:9080
+npm run dev
+
+# build electron application for production
+npm run build
+```
+
+#### Build Setup for Windows
 
 ``` bash
 # install dependencies
 yarn
 
 # rebuild native modules
-yarn add electron-rebuild --dev
 ./node_modules/.bin/electron-rebuild
 
 # serve with hot reload at localhost:9080
