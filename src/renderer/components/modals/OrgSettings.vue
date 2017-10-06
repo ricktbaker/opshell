@@ -134,6 +134,9 @@
               </form>
             </div>
           </div>
+          <div class="text-center">
+            <button class="btn btn-danger btn-sm" v-on:click="deleteOrg()">Delete this Organization</button>
+          </div>
         </div>
         <div class="modal-footer">
           <i class="fa fa-hand-stop-o"></i>
@@ -299,8 +302,24 @@ export default {
     deleteRegion: async function(awsRegion) {
       if (confirm('Are you sure you want to delete this region?  All associated SSH keys will be purged.')) {
         this.$db.awsRegions.remove({ _id: awsRegion._id });
+        const appData = app.getPath('home');
+        const dirPath = path.join(appData, '.opshell', this.org.name, awsRegion.region).replace(/\s+/g, '-');
+        fs.emptyDir(dirPath);
         ipcRenderer.send('updateMenuOrg');
         ipcRenderer.send('orgSettings', this.org._id);
+      } else {
+        return false;
+      }
+    },
+    deleteOrg: async function() {
+      if (confirm('Are you sure you want to delete this Organization?  All associated regions and SSH keys will be purged.')) {
+        this.$db.awsRegions.remove({org: this.org._id}, {multi: true});
+        this.$db.orgs.remove({_id: this.org._id});
+        const appData = app.getPath('home');
+        const dirPath = path.join(appData, '.opshell', this.org.name).replace(/\s+/g, '-');
+        fs.emptyDir(dirPath);
+        ipcRenderer.send('updateOrgSelect');
+        $('#orgSettingsModal').modal('hide');
       } else {
         return false;
       }

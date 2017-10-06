@@ -1,7 +1,13 @@
 # Opshell Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.0.4] - 2017-09-02
+## [0.0.5] - 2017-10-05
+### Fixed
+- Deleting a region was not deleting imported keys
+### Added
+- Added the ability to delete an Organization
+
+## [0.0.4] - 2017-10-02
 ### Changed
 - Renamed to Opshell, which changes file and db storage locations.  No migration for this, since it's only been publically available for a couple of days.
 

@@ -83,9 +83,14 @@ export default {
     changeOrg: async function() {
       if (this.selected._id !== 'select') {
         try {
-          this.org = await this.$db.orgs.cfindOne({ _id: this.selected._id }).exec();
-          this.awsRegions = await this.$db.awsRegions.cfind({org: this.org._id}).exec();
-          $('#orgDetails').show();
+          if (!this.selected._id) {
+            this.selected._id = 'select';
+            $('#orgDetails').hide();
+          } else {
+            this.org = await this.$db.orgs.cfindOne({ _id: this.selected._id }).exec();
+            this.awsRegions = await this.$db.awsRegions.cfind({org: this.org._id}).exec();
+            $('#orgDetails').show();
+          }
         } catch (err) {
           console.log(err);
         }
