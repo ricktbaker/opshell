@@ -21,7 +21,7 @@ Primary Components:
 
 [View the Current ChangeLog](CHANGELOG.md)
 
-#### Downloads
+#### Downloads - Version 0.0.5
 
 [Mac](http://opshell.ricktbaker.com/opshell-0.0.5.dmg)
 
