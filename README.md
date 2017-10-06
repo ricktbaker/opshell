@@ -24,6 +24,7 @@ Primary Components:
 #### Downloads
 
 [Mac](http://opshell.ricktbaker.com/opshell-0.0.5.dmg)
+
 [Windows](http://opshell.ricktbaker.com/opshell+Setup+0.0.5.exe) (Requires OpenSSH to be installed and ssh.exe to be in PATH)
 
 Linux Package coming soon
