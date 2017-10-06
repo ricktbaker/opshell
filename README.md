@@ -7,7 +7,7 @@
 
 This is my current pet project which is meant to help those that work with a number of AWS accounts.   Always having to login to the console to find the server you want to connect to, if you need to use a bastion host, what key you need to use, etc.
 
-This is still very early in the development phase.   It has some rough edges for sure, so if you have any problems just open up an Issue.
+This is still very early in the development phase.   It has some rough edges for sure, so if you have any problems just open up an Issue.   You can either download one of the prebuilt packages, or you can clone the repo and run it directly with npm.
 
 Primary Components:
 
