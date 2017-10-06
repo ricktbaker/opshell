@@ -3,7 +3,7 @@
   "version": "0.0.4",
   "author": "rickbaker <rick@ricktbaker.com>",
   "description": "Ops Helper for quickly working with AWS instances across multiple regions.",
-  "license": "MIT",
+  "license": "GPLv3",
   "main": "./dist/electron/main.js",
   "scripts": {
     "build": "node .electron-vue/build.js && electron-builder",
