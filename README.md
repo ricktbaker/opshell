@@ -7,7 +7,7 @@
 
 This is my current pet project which is meant to help those that work with a number of AWS accounts.   Always having to login to the console to find the server you want to connect to, if you need to use a bastion host, what key you need to use, etc.
 
-This is still very early in the development phase.   It has some rough edges for sure.   It has been developed on a Mac, so your mileage may vary on other platforms.  Currently there are no built downloads available.  Once I get to a good solid base I will try and make Mac and Windows downloadables available.   For now, if you have node installed, then you should be able to run/build on your own.
+This is still very early in the development phase.   It has some rough edges for sure, so if you have any problems just open up an Issue.
 
 Primary Components:
 
@@ -21,8 +21,14 @@ Primary Components:
 
 [View the Current ChangeLog](CHANGELOG.md)
 
+#### Downloads
 
-#### Build Setup for Mac/Linux
+[Mac](http://opshell.ricktbaker.com/opshell-0.0.5.dmg)
+[Windows](http://opshell.ricktbaker.com/opshell+Setup+0.0.5.exe) (Requires OpenSSH to be installed and ssh.exe to be in PATH)
+
+Linux Package coming soon
+
+#### Clone Repo and Build Setup for Mac/Linux
 ``` bash
 # install dependencies and native modules
 ./do_install.sh
@@ -34,20 +40,19 @@ npm run dev
 npm run build
 ```
 
-#### Build Setup for Windows
+#### Clone Repo and Build Setup for Windows
+
+Note: you'll need to have OpenSSH installed and ssh.exe in your path
 
 ``` bash
 # install dependencies
-yarn
-
-# rebuild native modules
-./node_modules/.bin/electron-rebuild
+npm
 
 # serve with hot reload at localhost:9080
-yarn run dev
+npm run dev
 
 # build electron application for production
-yarn run build
+npm run build
 ```
 
 #### What is working thus far
