@@ -23,11 +23,11 @@ Primary Components:
 
 [View the Current ChangeLog](CHANGELOG.md)
 
-#### Downloads - Version 0.0.6
+#### Downloads - Version 0.0.7
 
-[Mac](http://opshell.ricktbaker.com/opshell-0.0.6.dmg)
+[Mac](http://opshell.ricktbaker.com/opshell-0.0.7.dmg)
 
-[Windows](http://opshell.ricktbaker.com/opshell-Setup-0.0.6.exe) (Requires OpenSSH to be installed and ssh.exe to be in PATH)
+[Windows](http://opshell.ricktbaker.com/opshell-Setup-0.0.7.exe) (Requires OpenSSH to be installed and ssh.exe to be in PATH)
 
 Linux Package coming soon
 
@@ -49,13 +49,13 @@ Note: you'll need to have OpenSSH installed and ssh.exe in your path
 
 ``` bash
 # install dependencies
-npm
+yarn
 
 # serve with hot reload at localhost:9080
-npm run dev
+yarn run dev
 
 # build electron application for production
-npm run build
+yarn run build
 ```
 
 #### What is working thus far
@@ -68,7 +68,7 @@ Add your AWS access keys per Organization and region (only needs ec2.describeIns
 
 ![Access Keys](screenshots/access_keys.png "")
 
-Scan for keys that are used for SSH access, and import them
+Scan for keys that are used for SSH access, and import them.   Add custom users as well.
 
 ![SSH Keys](screenshots/import_keys.png "")
 
@@ -80,7 +80,8 @@ Setup a bastion host per region if you need to ssh into it first to access priva
 
 ![Bastion Host](screenshots/bastion_host.png "")
 
-Easily connect via ssh to a server with the click of a button
+Easily connect via ssh to a server with the click of a button.  If no key has been impored for user it
+will fall back to password prompt.
 
 ![SSH Connect](screenshots/ssh_connection.png "")
 

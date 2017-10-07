@@ -82,6 +82,7 @@ export default {
     },
     changeOrg: async function() {
       if (this.selected._id !== 'select') {
+        this.toggleCaret('awsRegion', true);
         try {
           if (!this.selected._id) {
             this.selected._id = 'select';

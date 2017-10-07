@@ -83,6 +83,7 @@
 .keystable {
   border-top: 1px solid #888888;
   margin-top: 10px;
+  width: 100%;
 }
 
 .keystable tr td, .keystable tr th {
@@ -109,4 +110,14 @@
   background: white;
   cursor: inherit;
   display: block;
+}
+
+#newCustomUser {
+  font-size: 12px;
+  width: 200px;
+  height: 25px;
+}
+#addUserButton {
+  height: 23px;
+  margin-left: 5px;
 }

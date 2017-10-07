@@ -20,6 +20,7 @@ import { ipcRenderer } from 'electron';
 import os from 'os';
 import * as pty from 'node-pty';
 import path from 'path';
+import fs from 'fs-extra';
 
 const {app} = require('electron').remote;
 // const Client = require('ssh2').Client
@@ -96,7 +97,11 @@ export default {
       this.term._initialized = true;
 
       const appData = app.getPath('home');
-      const keyPath = path.join(appData, '.opshell', this.org.name, this.awsRegion.region, server.instance.keyFile).replace(/\s+/g, '-');
+      let keyPath = '';
+      const keyCheck = path.join(appData, '.opshell', this.org.name, this.awsRegion.region, server.instance.keyFile).replace(/\s+/g, '-');
+      if (fs.pathExists(keyCheck)) {
+        keyPath = ' -i ' + keyCheck;
+      }
       var shell = os.platform() === 'win32' ? 'powershell.exe' : 'bash';
 
       this.ptyProcess = pty.spawn(shell, [], {
@@ -108,11 +113,11 @@ export default {
       });
 
       if (!server.bastionHost) {
-        const serverCommand = 'ssh -o "UserKnownHostsFile /dev/null" -o StrictHostKeyChecking=no -i ' + keyPath + ' -l ' + server.user + ' ' + server.ip;
+        const serverCommand = 'ssh -o "UserKnownHostsFile /dev/null" -o StrictHostKeyChecking=no ' + keyPath + ' -l ' + server.user + ' ' + server.ip;
         this.ptyProcess.write(serverCommand + '\r\n');
       } else {
         const bastionKeyPath = path.join(appData, '.opshell', this.org.name, this.awsRegion.region, server.bastionHost.keyFile).replace(/\s+/g, '-');
-        const bastionCommand = 'ssh -t -o "UserKnownHostsFile /dev/null" -o StrictHostKeyChecking=no -o ProxyCommand=\'ssh -i ' + bastionKeyPath + ' -l ' + this.awsRegion.bastionUser + ' ' + server.bastionHost.publicIp + ' nc %h %p\' -i ' + keyPath + ' -l ' + server.user + ' ' + server.ip;
+        const bastionCommand = 'ssh -t -o "UserKnownHostsFile /dev/null" -o StrictHostKeyChecking=no -o ProxyCommand=\'ssh ' + bastionKeyPath + ' -l ' + this.awsRegion.bastionUser + ' ' + server.bastionHost.publicIp + ' nc %h %p\' ' + keyPath + ' -l ' + server.user + ' ' + server.ip;
         this.ptyProcess.write(bastionCommand + '\r\n');
       }
       this.ptyProcess.on('data', function(data) {

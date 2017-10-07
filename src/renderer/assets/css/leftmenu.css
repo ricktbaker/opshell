@@ -8,7 +8,8 @@
 }
 
 #left-menu i {
-  margin: 15px 0px;
+  margin: 15px 0px 15px -1px;
+  font-size: 1.75em !important;
 }
 #left-menu .fa-stack {
   margin: -8px -5px;

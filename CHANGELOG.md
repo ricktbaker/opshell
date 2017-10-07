@@ -1,6 +1,11 @@
 # Opshell Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.0.7] - 2017-10-07
+### Added
+- Ability to add users to a region to ssh as instead of just the default aws users
+- If no ssh key is uploaded it will try to do password authentication
+
 ## [0.0.6] - 2017-10-06
 ### Fixed
 - Bastion Host was not properly saving

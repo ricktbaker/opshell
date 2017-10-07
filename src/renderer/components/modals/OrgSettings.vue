@@ -61,7 +61,7 @@
                     </div>
 
                     <div :id="'keys' + awsRegion.region" style="display: none">
-                      AWS SSH Keys
+                      AWS Default User Keys
                       <button v-on:click="scanRegion(awsRegion)" style="padding: 2px 5px" class="pull-right btn btn-sm btn-primary">
                         <i :id="'scan' + awsRegion.region" style="display: none" class="fa fa-spinner fa-spin fa-fw"></i>
                         Scan Region for Required Keys
@@ -70,12 +70,12 @@
                       <table class="keystable table table-sm table-condensed table-striped">
                         <thead>
                           <tr>
-                            <th>Key Name</th>
+                            <th style="width: 50%">Key Name</th>
                             <th>Imported</th>
                           </tr>
                         </thead>
                         <tbody>
-                          <tr v-for="key in awsRegion.keys" v-bind:key="key.keyName">
+                          <tr v-for="key in awsRegion.keys" v-bind:key="key.keyName" v-if="!key.custom">
                             <td>{{ key.keyName }}</td>
                             <td>
                               {{ key.value ? 'Yes' : 'No'}}
@@ -89,6 +89,43 @@
                         </tbody>
                       </table>
                       <div id="keyError"></div>
+
+                      <table style="width: 100%">
+                        <tr>
+                          <td>
+                            Custom User Keys
+                          </td>
+                          <td>
+                            &nbsp; <button id="addUserButton" v-on:click="addUser(awsRegion)" style="padding: 2px 5px" class="pull-right btn btn-sm btn-primary">
+                            <i :id="'scan' + awsRegion.region" style="display: none" class="fa fa-spinner fa-spin fa-fw"></i>
+                            Add User
+                            </button>
+                            <input id="newCustomUser" class="form-control form-conrol-sm pull-right" placeholder="Enter New User" />
+                          </td>
+                        </tr>
+                      </table>
+
+                      <table class="keystable table table-sm table-condensed table-striped">
+                        <thead>
+                          <tr>
+                            <th style="width: 50%">User</th>
+                            <th>Imported</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr v-for="key in awsRegion.keys" v-bind:key="key.keyName" v-if="key.custom">
+                            <td>{{ key.keyName }}</td>
+                            <td>
+                              {{ key.value ? 'Yes' : 'No'}}
+                              <label class="btn btn-success btn-sm btn-file pull-right">
+                                <span v-if="!key.value">Import Key</span>
+                                <span v-else>Update Key</span>
+                                <input type="file" @change="onFileChange($event, awsRegion, key.keyName)" style="display: none;">
+                              </label>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
                     </div>
                   </div>
                 </div>
@@ -322,6 +359,16 @@ export default {
         $('#orgSettingsModal').modal('hide');
       } else {
         return false;
+      }
+    },
+    addUser: async function(awsRegion) {
+      const newUser = $('#newCustomUser').val();
+      if (newUser) {
+        $('#neCustomUser').val('');
+        awsRegion.keys.push({keyName: newUser, value: null, custom: true});
+        await this.$db.awsRegions.update({ _id: awsRegion._id }, awsRegion);
+        this.awsRegion = awsRegion;
+        ipcRenderer.send('orgSettings', this.org._id);
       }
     },
     scanRegion: function(awsRegion) {

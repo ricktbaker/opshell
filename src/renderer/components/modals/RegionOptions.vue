@@ -39,6 +39,7 @@
 
 <script>
 import { ipcRenderer } from 'electron';
+import _ from 'lodash';
 
 export default {
   name: 'regionOptions',
@@ -67,6 +68,11 @@ export default {
       if (!this.awsRegion.useBastion) {
         this.awsRegion.useBastion = false;
       }
+      _.each(this.awsRegion.keys, (key) => {
+        if (key.custom) {
+          this.awsUsers.push(key.keyName);
+        }
+      });
       this.bastionHost = this.awsRegion.bastionHost;
       this.bastionUser = this.awsRegion.bastionUser;
       this.useBastion = this.awsRegion.useBastion;

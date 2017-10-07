@@ -166,13 +166,26 @@ export default {
       this.awsRegion = await this.$db.awsRegions.cfindOne({_id: this.awsRegionId}).exec();
       const tempData = await this.$db.tempData.cfind({org: this.orgId, region: this.awsRegionId, type: 'region'}).exec();
       this.tempData = new Map(tempData.map(element => [element.name, element]));
+      _.each(this.awsRegion.keys, (key) => {
+        if (key.custom) {
+          this.awsUsers.push(key.keyName);
+        }
+      });
       if (typeof (cb) === 'function') {
         cb();
       }
     },
+
+    /**
+     * Open up region settings modal
+     */
     regionSettings: function() {
       ipcRenderer.send('regionSettings', {org: this.orgId, awsRegion: this.awsRegionId, instances: this.instances, tab: this.tab});
     },
+
+    /**
+     * Show details for a specific instance row
+     */
     toggleDetails: function(instanceId) {
       if ($('#tab' + this.tab + ' #caret' + instanceId).hasClass('fa-caret-right')) {
         $('#tab' + this.tab + ' #' + instanceId).show();
@@ -182,6 +195,10 @@ export default {
         $('#tab' + this.tab + ' #caret' + instanceId).removeClass('fa-caret-down').addClass('fa-caret-right');
       }
     },
+
+    /**
+     * Initiate an SSH connection in a new tab
+     */
     ssh: async function(instance) {
       let bastionHost;
       if ($('#sshBastion' + instance.instanceId).val()) {

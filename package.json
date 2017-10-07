@@ -1,10 +1,14 @@
 {
   "name": "opsshell",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "author": "rickbaker <rick@ricktbaker.com>",
   "description": "Ops Helper for quickly working with AWS instances across multiple regions.",
-  "license": "GPLv3",
+  "license": "GPL-3.0",
   "main": "./dist/electron/main.js",
+  "repository" :
+  { "type" : "git"
+  , "url" : "https://github.com/ricktbaker/opshell.git"
+  },
   "scripts": {
     "build": "node .electron-vue/build.js && electron-builder",
     "build:dir": "node .electron-vue/build.js && electron-builder --dir",
@@ -98,7 +102,7 @@
     "del": "^3.0.0",
     "devtron": "^1.4.0",
     "electron": "~1.7.6",
-    "electron-builder": "^19.19.1",
+    "electron-builder": "^19.34.2",
     "electron-debug": "^1.4.0",
     "electron-devtools-installer": "^2.2.0",
     "electron-rebuild": "^1.6.0",
