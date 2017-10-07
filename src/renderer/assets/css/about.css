@@ -1,0 +1,11 @@
+#about img {
+  width: 100px;
+}
+#about table {
+  width: 100%;
+  margin: 10px;
+}
+#about a, #about a:hover, #about a:active, #about a:visited {
+  color: #aaaacc;
+  text-decoration: none;
+}

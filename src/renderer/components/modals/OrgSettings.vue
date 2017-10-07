@@ -7,8 +7,8 @@
           <i class="fa fa-times-circle-o" arial-label="Close" v-on:click="closeOrgSettings()"></i>
           </a>
         </div>
-        <div class="modal-body" id="orgSettingsBody">
 
+        <div class="modal-body" id="orgSettingsBody">
           <i v-on:click="toggleCaret('awsRegion')" id="awsRegionSettingsCaret" class="fa fa-caret-right"></i>
           <i v-on:click="addNewRegionModal" class="fa fa-plus-circle pull-right" title="Add New Region"></i>
           <span v-on:click="toggleCaret('awsRegion')" style="cursor: pointer">AWS Regions</span>
@@ -23,8 +23,8 @@
                     <i v-on:click="toggleEdit(awsRegion,'keys')" class="fa fa-key pull-right" title="Manage SSH Keys"></i>
                     <i v-on:click="toggleEdit(awsRegion,'settings')" class="fa fa-edit pull-right" title="Edit Region Settings"></i>
                   </div>
-                  <div class="card-block">
 
+                  <div class="card-block">
                     <div :id="'settings' + awsRegion.region" style="display: none">
                       <form>
                         <div class="form-group">

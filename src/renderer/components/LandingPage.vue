@@ -10,6 +10,7 @@
     <orgSettingsModal></orgSettingsModal>
     <regionSettingsModal></regionSettingsModal>
     <cloudSettings></cloudSettings>
+    <about></about>
   </div>
 </template>
 <script>
@@ -21,11 +22,16 @@ import OrgSettingsModal from './modals/OrgSettings.vue';
 import RegionSettingsModal from './modals/RegionOptions.vue';
 import MainView from './MainView.vue';
 import CloudSettings from './modals/CloudSettings.vue';
+import About from './modals/About.vue';
 import { ipcRenderer } from 'electron';
 
 export default {
   name: 'landing-page',
   mounted: async function() {
+    ipcRenderer.on('aboutWindow', () => {
+      console.log('about');
+      $('#about').modal('show');
+    });
     ipcRenderer.send('updateOrgSelect');
     const orgCheck = await this.$db.orgs.ccount().exec();
     if (!orgCheck || orgCheck < 1) {
@@ -33,7 +39,7 @@ export default {
     }
   },
   components: {
-    LeftMenu, OrgMenu, NewOrgModal, AlertBox, OrgSettingsModal, MainView, RegionSettingsModal, CloudSettings
+    LeftMenu, OrgMenu, NewOrgModal, AlertBox, OrgSettingsModal, MainView, RegionSettingsModal, CloudSettings, About
   },
   methods: {
   }

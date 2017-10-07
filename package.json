@@ -1,6 +1,6 @@
 {
   "name": "opsshell",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "author": "rickbaker <rick@ricktbaker.com>",
   "description": "Ops Helper for quickly working with AWS instances across multiple regions.",
   "license": "GPLv3",
@@ -60,6 +60,7 @@
     "axios": "^0.16.1",
     "bootbox": "^4.4.0",
     "bootstrap": "4.0.0-alpha.6",
+    "compare-versions": "^3.1.0",
     "font-awesome": "^4.7.0",
     "fs": "^0.0.1-security",
     "fs-extra": "^4.0.2",
@@ -101,6 +102,7 @@
     "electron-debug": "^1.4.0",
     "electron-devtools-installer": "^2.2.0",
     "electron-rebuild": "^1.6.0",
+    "electron-simple-publisher": "^0.4.7",
     "eslint": "^4.4.1",
     "eslint-config-standard": "^10.2.1",
     "eslint-friendly-formatter": "^3.0.0",

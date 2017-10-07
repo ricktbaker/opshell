@@ -1,13 +1,42 @@
 <template>
   <div class="col" id="left-menu">
-    <i v-on:click="toggleOrg" class="fa fa-building-o fa-lg" title="Organizations"></i>
+    <i v-on:click="toggleOrg" class="fa fa-building-o fa-2x" title="Organizations"></i>
     <!-- <i data-target="#cloudSettings" data-toggle="modal" class="fa fa-cloud-download fa-lg" title="Cloud Settings" /> -->
+    <i v-if="!newVersion" v-on:click="openGithub" class="fa fa-github fa-2x" title="Github Repo"></i>
+    <span v-if="newVersion" title="Newer version available" class="fa-stack">
+      <i class="fa fa-star fa-stack" style="color: gold; position: absolute; margin-top: 5px; margin-left: 20px;"></i>
+      <i class="fa fa-github fa-stack-2x"></i>
+    </span>
   </div>
 </template>
 <script>
-import { ipcRenderer } from 'electron';
+import { ipcRenderer, shell } from 'electron';
+import request from 'request';
+import compareVersion from 'compare-versions';
 export default {
   name: 'leftMenu',
+  data: function() {
+    return {
+      newVersion: false
+    };
+  },
+  mounted: function() {
+    const vue = this;
+    var url = 'http://opshell.ricktbaker.com/release.json';
+    request({
+      url: url,
+      json: true
+    }, function (error, response, body) {
+      if (!error && response.statusCode === 200) {
+        var pjson = require('../../../package.json');
+        if (compareVersion(body.version, pjson.version) > 0) {
+          vue.newVersion = true;
+        }
+      } else {
+        console.log(error);
+      }
+    });
+  },
   methods: {
     toggleOrg() {
       $('#leftMenuExpanded').toggle();
@@ -17,6 +46,9 @@ export default {
         $('#mainView').css('padding-left', '45px');
       }
       ipcRenderer.send('orgMenuToggle');
+    },
+    openGithub: () => {
+      shell.openExternal('https://github.com/ricktbaker/opshell');
     }
   }
 };

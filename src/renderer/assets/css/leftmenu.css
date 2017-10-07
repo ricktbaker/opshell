@@ -10,3 +10,6 @@
 #left-menu i {
   margin: 15px 0px;
 }
+#left-menu .fa-stack {
+  margin: -8px -5px;
+}

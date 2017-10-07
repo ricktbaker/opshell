@@ -1,6 +1,4 @@
-const {Menu} = require('electron');
-const electron = require('electron');
-const app = electron.app;
+const {app, Menu} = require('electron');
 
 const template = [
   {
@@ -62,84 +60,29 @@ const template = [
         role: 'close'
       }
     ]
-  },
-  {
-    role: 'help',
-    submenu: [
-      {
-        label: 'Learn More',
-        click () { require('electron').shell.openExternal('http://electron.atom.io'); }
-      }
-    ]
   }
 ];
 
 if (process.platform === 'darwin') {
-  const name = app.getName();
   template.unshift({
-    label: name,
+    label: app.getName(),
     submenu: [
       {
-        role: 'about'
+        label: 'About',
+        click: function (menuItem, currentWindow) {
+          currentWindow.webContents.send('aboutWindow');
+        }
       },
-      {
-        type: 'separator'
-      },
-      {
-        role: 'services',
-        submenu: []
-      },
-      {
-        type: 'separator'
-      },
-      {
-        role: 'hide'
-      },
-      {
-        role: 'hideothers'
-      },
-      {
-        role: 'unhide'
-      },
-      {
-        type: 'separator'
-      },
-      {
-        role: 'quit'
-      }
+      {type: 'separator'},
+      {role: 'services', submenu: []},
+      {type: 'separator'},
+      {role: 'hide'},
+      {role: 'hideothers'},
+      {role: 'unhide'},
+      {type: 'separator'},
+      {role: 'quit'}
     ]
   });
-  // Window menu.
-  template[3].submenu = [
-    {
-      label: 'Close',
-      accelerator: 'CmdOrCtrl+W',
-      role: 'close'
-    },
-    {
-      label: 'Minimize',
-      accelerator: 'CmdOrCtrl+M',
-      role: 'minimize'
-    },
-    {
-      label: 'Zoom',
-      role: 'zoom'
-    },
-    {
-      label: 'Toggle Developer Tools',
-      accelerator: process.platform === 'darwin' ? 'Alt+Command+I' : 'Ctrl+Shift+I',
-      click (item, focusedWindow) {
-        if (focusedWindow) focusedWindow.webContents.toggleDevTools();
-      }
-    },
-    {
-      type: 'separator'
-    },
-    {
-      label: 'Bring All to Front',
-      role: 'front'
-    }
-  ];
 }
 
 const menu = Menu.buildFromTemplate(template);

@@ -1,6 +1,8 @@
 <div align="center">
 <br />
 <img align="center" src="opshell.png" alt="Opshell">
+<br />
+<a href="http://ricktbaker.com/opshell">Website</a>
 <br>
 <br>
 </div>
@@ -21,11 +23,11 @@ Primary Components:
 
 [View the Current ChangeLog](CHANGELOG.md)
 
-#### Downloads - Version 0.0.5
+#### Downloads - Version 0.0.6
 
-[Mac](http://opshell.ricktbaker.com/opshell-0.0.5.dmg)
+[Mac](http://opshell.ricktbaker.com/opshell-0.0.6.dmg)
 
-[Windows](http://opshell.ricktbaker.com/opshell-Setup-0.0.5.exe) (Requires OpenSSH to be installed and ssh.exe to be in PATH)
+[Windows](http://opshell.ricktbaker.com/opshell-Setup-0.0.6.exe) (Requires OpenSSH to be installed and ssh.exe to be in PATH)
 
 Linux Package coming soon
 

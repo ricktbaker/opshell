@@ -77,7 +77,7 @@ export default {
   methods: {
     updateRegion: async function() {
       this.awsRegion.useBastion = this.useBastion;
-      this.awsRegion.bastionHost = this.bastionHost.instanceId;
+      this.awsRegion.bastionHost = this.bastionHost;
       this.awsRegion.bastionUser = this.bastionUser;
       await this.$db.awsRegions.update({_id: this.awsRegion._id}, this.awsRegion);
       ipcRenderer.send('updateTabData', {tab: this.tab});

@@ -1,6 +1,13 @@
 # Opshell Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.0.6] - 2017-10-06
+### Fixed
+- Bastion Host was not properly saving
+### Added
+- About page
+- Check for newer versions
+
 ## [0.0.5] - 2017-10-05
 ### Fixed
 - Deleting a region was not deleting imported keys
