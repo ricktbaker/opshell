@@ -1,8 +1,6 @@
 <template>
   <table id="regionTable" class="table table-sm table-condensed">
     <thead>
-      {{sortKey}}
-      {{sortDir}}
       <tr id="regionSettingsHeader">
         <th colspan="2">
           <input id="instanceSearch" v-on:keyup="instanceSearch()" class="form-control input-sm" placeholder="Search instances"></input>
