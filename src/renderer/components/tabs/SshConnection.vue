@@ -116,7 +116,7 @@ export default {
         const serverCommand = 'ssh -o "UserKnownHostsFile /dev/null" -o StrictHostKeyChecking=no ' + keyPath + ' -l ' + server.user + ' ' + server.ip;
         this.ptyProcess.write(serverCommand + '\r\n');
       } else {
-        const bastionKeyPath = path.join(appData, '.opshell', this.org.name, this.awsRegion.region, server.bastionHost.keyFile).replace(/\s+/g, '-');
+        const bastionKeyPath = ' -i ' + path.join(appData, '.opshell', this.org.name, this.awsRegion.region, server.bastionHost.keyFile).replace(/\s+/g, '-');
         const bastionCommand = 'ssh -t -o "UserKnownHostsFile /dev/null" -o StrictHostKeyChecking=no -o ProxyCommand=\'ssh ' + bastionKeyPath + ' -l ' + this.awsRegion.bastionUser + ' ' + server.bastionHost.publicIp + ' nc %h %p\' ' + keyPath + ' -l ' + server.user + ' ' + server.ip;
         this.ptyProcess.write(bastionCommand + '\r\n');
       }
@@ -174,7 +174,7 @@ export default {
     ipcRenderer.on('resize', () => {
       this.resizeIt();
     });
-    ipcRenderer.on('doSsh', async (e, server) => {
+    ipcRenderer.on('sshconnection.doSsh', async (e, server) => {
       if (this.rendered === false) {
         this.instance = server.instance;
         this.rendered = true;

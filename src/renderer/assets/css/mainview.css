@@ -7,17 +7,16 @@
   color: #aaaaaa;
 }
 
-#navWrapper {
+#mainView #tabs {
+  position: fixed;
+  top: 0;
   overflow-x: auto;
-}
-.nav-tabs {
+  width: 95vw;
   border: none;
   background: #444444;
   border-left: 1px solid #000000;
   height: 40px;
-  min-width: 102%;
   border-bottom: none !important;
-  overflow-x: auto;
 }
 
 li {
@@ -25,7 +24,7 @@ li {
 }
 
 .tab-content {
-  margin: 5px;
+  margin: 45px 5px 5px 5px;
 }
 
 .nav-tabs>li>a {

@@ -1,6 +1,9 @@
 #about img {
   width: 100px;
 }
+#about .modal-body {
+  padding-bottom: 10px;
+}
 #about table {
   width: 100%;
   margin: 10px;

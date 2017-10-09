@@ -6,10 +6,6 @@
       <orgMenu></orgmenu>
       <mainView></mainView>
     </div>
-    <newOrgModal></newOrgModal>
-    <orgSettingsModal></orgSettingsModal>
-    <regionSettingsModal></regionSettingsModal>
-    <cloudSettings></cloudSettings>
     <about></about>
   </div>
 </template>
@@ -17,11 +13,7 @@
 import AlertBox from './AlertBox.vue';
 import LeftMenu from './LeftMenu';
 import OrgMenu from './OrgMenu';
-import NewOrgModal from './modals/NewOrgModal.vue';
-import OrgSettingsModal from './modals/OrgSettings.vue';
-import RegionSettingsModal from './modals/RegionOptions.vue';
 import MainView from './MainView.vue';
-import CloudSettings from './modals/CloudSettings.vue';
 import About from './modals/About.vue';
 import { ipcRenderer } from 'electron';
 
@@ -29,17 +21,16 @@ export default {
   name: 'landing-page',
   mounted: async function() {
     ipcRenderer.on('aboutWindow', () => {
-      console.log('about');
       $('#about').modal('show');
     });
-    ipcRenderer.send('updateOrgSelect');
+    ipcRenderer.send('orgmenu.updateSelectBox');
     const orgCheck = await this.$db.orgs.ccount().exec();
     if (!orgCheck || orgCheck < 1) {
-      $('#addOrgModal').modal('show');
+      ipcRenderer.send('alertbox.show', {type: 'newOrg'});
     }
   },
   components: {
-    LeftMenu, OrgMenu, NewOrgModal, AlertBox, OrgSettingsModal, MainView, RegionSettingsModal, CloudSettings, About
+    LeftMenu, OrgMenu, AlertBox, MainView, About
   },
   methods: {
   }

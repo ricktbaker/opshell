@@ -1,0 +1,23 @@
+#whatsnew .versionwrapper {
+  margin: 10px 10px;
+  border-radius: 5px;
+  box-shadow: 4px 4px 8px #000;
+  border: 1px solid #666666;
+  padding: 10px;
+}
+
+#whatsnew .header {
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+#whatsnew .subheader {
+  font-size: 13px;
+  margin-left: 20px;
+}
+
+#whatsnew .subitem {
+  margin-left: 40px;
+  font-size: 12px;
+}

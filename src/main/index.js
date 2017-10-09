@@ -52,40 +52,40 @@ app.on('activate', () => {
   }
 });
 
-ipcMain.on('showAlert', (e, data) => {
-  mainWindow.send('showAlert', data);
+ipcMain.on('alertbox.show', (e, data) => {
+  mainWindow.send('alertbox.show', data);
 });
 
-ipcMain.on('updateOrgSelect', () => {
-  mainWindow.send('updateOrgSelect');
+ipcMain.on('orgmenu.updateSelectBox', () => {
+  mainWindow.send('orgmenu.updateSelectBox');
 });
 
-ipcMain.on('orgSettings', (e, org) => {
-  mainWindow.send('orgSettings', org);
+ipcMain.on('mainview.closeTab', (e, tabId) => {
+  mainWindow.send('mainview.closeTab', tabId);
 });
 
-ipcMain.on('updateMenuOrg', () => {
-  mainWindow.send('updateMenuOrg');
+ipcMain.on('orgmenu.updateSelectedOrg', () => {
+  mainWindow.send('orgmenu.updateSelectedOrg');
 });
 
-ipcMain.on('openTab', (e, data) => {
-  mainWindow.send('openTab', data);
+ipcMain.on('orgsettings.loadData', (e, data) => {
+  mainWindow.send('orgsettings.loadData', data);
 });
 
-ipcMain.on('regionData', (e, data) => {
-  mainWindow.send('regionData', data);
+ipcMain.on('mainview.openTab', (e, data) => {
+  mainWindow.send('mainview.openTab', data);
 });
 
-ipcMain.on('doSsh', (e, data) => {
-  mainWindow.send('doSsh', data);
+ipcMain.on('awsregion.regionData', (e, data) => {
+  mainWindow.send('awsregion.regionData', data);
 });
 
-ipcMain.on('regionSettings', (e, data) => {
-  mainWindow.send('regionSettings', data);
+ipcMain.on('sshconnection.doSsh', (e, data) => {
+  mainWindow.send('sshconnection.doSsh', data);
 });
 
-ipcMain.on('updateTabData', (e, data) => {
-  mainWindow.send('updateTabData', data);
+ipcMain.on('awsregion.updateTabData', (e, data) => {
+  mainWindow.send('awsregion.updateTabData', data);
 });
 
 ipcMain.on('orgMenuToggle', (e, data) => {

@@ -2,30 +2,29 @@
   <div class="col" id="leftMenuExpanded">
     <div class="header">
       ORGANIZATIONS &nbsp;
-      <span data-target="#addOrgModal" data-toggle="modal">
+      <span v-on:click="newOrg()">
         <i class="fa fa-plus fa-lg" title="Add New Organization"></i>
       </span>
     </div>
     <div class="select">
-      <select v-on:change="changeOrg" class="orgSelect" name="selectedOrg" v-model="selected._id">
+      <select v-on:change="changeOrg" class="orgSelect" name="selectedOrg" v-model="selected">
         <option value="" selected="selected">Select Organization</option>
         <option v-for="org in orgs" :value="org._id" :key="org._id">{{ org.name }}</option>
       </select>
     </div>
 
-    <div id="orgDetails" class="details">
+    <div id="orgDetails" class="details" v-if="orgDetails">
       <div id="orgSettings">
         <button v-on:click="orgSettings" class="btn btn-sm">
           <i class="fa fa-cog"></i>
           Configure Org
         </button>
       </div>
-
       <span style="cursor: pointer" v-on:click="toggleCaret('awsRegion')">
-      <i id="awsRegionCaret" class="fa fa-caret-right"></i> AWS Regions
+      <i id="awsRegionCaret" class="fa" v-bind:class="{'fa-caret-right':awsRegionContent === false,'fa-caret-down':awsRegionContent === true}"></i> AWS Regions
       <span style="float: right">({{awsRegions.length}})</span><br />
       </span>
-      <div id="awsRegionContent">
+      <div id="awsRegionContent" v-if="awsRegionContent === true">
         <div v-on:click="openTab('awsRegion',awsRegion._id)" v-for="awsRegion in awsRegions" v-bind:key="awsRegion._id">
           <i class="fa fa-cloud"></i>
           {{awsRegion.region}}
@@ -46,57 +45,65 @@ export default {
       awsRegions: [],
       orgs: [],
       test: [],
-      selected: {
-        _id: ''
-      }
+      selected: '',
+      orgDetails: false,
+      awsRegionContent: false
     };
   },
   mounted: function() {
-    $('#leftMenuExpanded').hide();
-    ipcRenderer.on('updateOrgSelect', this.updateOrgs);
-    ipcRenderer.on('updateMenuOrg', this.changeOrg);
-    $('#orgDetails').hide();
-    $('#awsRegionContent').hide();
+    ipcRenderer.on('orgmenu.updateSelectBox', this.updateOrgs);
+    ipcRenderer.on('orgmenu.updateSelectedOrg', this.changeOrg);
+    this.awsRegionContent = false;
   },
   methods: {
+    newOrg: function() {
+      ipcRenderer.send('alertbox.show', {type: 'newOrg'});
+    },
     openTab: function(type, value) {
       const data = {};
       if (type === 'awsRegion') {
         data.org = this.org._id;
         data.type = type;
         data.awsRegion = value;
-        ipcRenderer.send('openTab', data);
+        ipcRenderer.send('mainview.openTab', data);
       }
     },
     toggleCaret: function(type, close) {
-      if ($('#' + type + 'Caret').hasClass('fa-caret-right') && !close) {
-        $('#' + type + 'Caret').removeClass('fa-caret-right').addClass('fa-caret-down');
-        $('#' + type + 'Content').show();
-      } else {
-        $('#' + type + 'Caret').removeClass('fa-caret-down').addClass('fa-caret-right');
-        $('#' + type + 'Content').hide();
+      if (type === 'awsRegion') {
+        if (this.awsRegionContent || close) {
+          this.awsRegionContent = false;
+        } else {
+          this.awsRegionContent = true;
+        }
       }
     },
     orgSettings: function() {
-      ipcRenderer.send('orgSettings', this.selected._id);
+      const data = {};
+      data.org = this.org._id;
+      data.type = 'orgSettings';
+      ipcRenderer.send('mainview.openTab', data);
     },
     changeOrg: async function() {
-      if (this.selected._id !== 'select') {
+      if (this.selected !== '') {
         this.toggleCaret('awsRegion', true);
         try {
-          if (!this.selected._id) {
-            this.selected._id = 'select';
-            $('#orgDetails').hide();
+          if (!this.selected) {
+            this.selected = '';
+            this.orgDetails = false;
           } else {
-            this.org = await this.$db.orgs.cfindOne({ _id: this.selected._id }).exec();
-            this.awsRegions = await this.$db.awsRegions.cfind({org: this.org._id}).exec();
-            $('#orgDetails').show();
+            this.org = await this.$db.orgs.cfindOne({ _id: this.selected }).exec();
+            if (this.org) {
+              this.awsRegions = await this.$db.awsRegions.cfind({org: this.org._id}).exec();
+              this.orgDetails = true;
+            } else {
+              this.orgDetails = false;
+            }
           }
         } catch (err) {
           console.log(err);
         }
       } else {
-        $('#orgDetails').hide();
+        this.orgDetails = false;
       }
     },
     updateOrgs: async function() {
@@ -105,11 +112,13 @@ export default {
         if (docs.length > 0) {
           this.orgs = [];
           _.each(docs, (org) => {
-            const minimal = {
-              _id: org._id,
-              name: org.name
-            };
-            this.orgs.push(minimal);
+            if (org) {
+              const minimal = {
+                _id: org._id,
+                name: org.name
+              };
+              this.orgs.push(minimal);
+            }
           });
         }
       } catch (err) {

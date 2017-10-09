@@ -1,6 +1,17 @@
 # Opshell Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.0.8] - 2017-10-08
+### Fixed
+- SSH through a bastion host was not working properly due to a change in 0.0.7
+- Tab headers now stay in place at top of screen when scrolling tab content
+### Added
+- Ability to set the default ssh user to a custom user instead of the standard AWS users
+- Added a "What's New" menu item, to show changelog.  Will open first time app is opened when updated
+### Changed
+- Removed all modals except for the about window.   All configuration has been moved into a tab
+- Removed most dom manipulation via jQuery in favor of Vue methods
+
 ## [0.0.7] - 2017-10-07
 ### Added
 - Ability to add users to a region to ssh as instead of just the default aws users

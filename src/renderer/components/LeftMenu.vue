@@ -21,6 +21,7 @@ export default {
     };
   },
   mounted: function() {
+    $('#leftMenuExpanded').hide();
     const vue = this;
     var url = 'http://opshell.ricktbaker.com/release.json';
     request({
@@ -42,8 +43,10 @@ export default {
       $('#leftMenuExpanded').toggle();
       if ($('#leftMenuExpanded').is(':visible')) {
         $('#mainView').css('padding-left', '245px');
+        $('#mainView #tabs').css('width', '80vw');
       } else {
         $('#mainView').css('padding-left', '45px');
+        $('#mainView #tabs').css('width', '95vw');
       }
       ipcRenderer.send('orgMenuToggle');
     },

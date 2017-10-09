@@ -73,6 +73,14 @@ if (process.platform === 'darwin') {
           currentWindow.webContents.send('aboutWindow');
         }
       },
+      {
+        label: 'What\'s New',
+        click: function (menuItem, currentWindow) {
+          const data = {};
+          data.type = 'whatsNew';
+          currentWindow.webContents.send('mainview.openTab', data);
+        }
+      },
       {type: 'separator'},
       {role: 'services', submenu: []},
       {type: 'separator'},

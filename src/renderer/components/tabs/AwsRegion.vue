@@ -1,6 +1,8 @@
 <template>
   <table id="regionTable" class="table table-sm table-condensed">
     <thead>
+      {{sortKey}}
+      {{sortDir}}
       <tr id="regionSettingsHeader">
         <th colspan="2">
           <input id="instanceSearch" v-on:keyup="instanceSearch()" class="form-control input-sm" placeholder="Search instances"></input>
@@ -11,18 +13,30 @@
           <i v-on:click="regionSettings()" class="fa fa-cog fa-2x pull-right" title="Region Settings"></i>
         </th>
       <tr id="regionHeaders">
-        <th v-on:click="doSort('name')">Name <i id='nameSort'></i></th>
-        <th v-on:click="doSort('instanceId')">Instance ID <i id='instanceIdSort'></i></th>
-        <th v-on:click="doSort('instanceType')">Instance Type <i id='instanceTypeSort'></i></th>
-        <th v-on:click="doSort('state')">State <i id='stateSort'></i></th>
-        <th v-on:click="doSort('publicIp')">Public IP <i id='publicIpSort'></i></th>
-        <th v-on:click="doSort('privateIp')">Private IP <i id='privateIpSort'></i></th>
+        <th v-on:click="doSort('name')">Name &nbsp;
+          <i class="fa" v-if="sortKey === 'name'" v-bind:class="{'fa-caret-down':sortDir==='asc','fa-caret-up':sortDir==='desc'}"></i>
+        </th>
+        <th v-on:click="doSort('instanceId')">Instance ID &nbsp;
+          <i class="fa" v-if="sortKey === 'instanceId'" v-bind:class="{'fa-caret-down':sortDir==='asc','fa-caret-up':sortDir==='desc'}"></i>
+        </th>
+        <th v-on:click="doSort('instanceType')">Instance Type &nbsp;
+          <i class="fa" v-if="sortKey === 'instanceType'" v-bind:class="{'fa-caret-down':sortDir==='asc','fa-caret-up':sortDir==='desc'}"></i>
+        </th>
+        <th v-on:click="doSort('state')">State &nbsp;
+          <i class="fa" v-if="sortKey === 'state'" v-bind:class="{'fa-caret-down':sortDir==='asc','fa-caret-up':sortDir==='desc'}"></i>
+        </th>
+        <th v-on:click="doSort('publicIp')">Public IP &nbsp;
+          <i class="fa" v-if="sortKey === 'publicIp'" v-bind:class="{'fa-caret-down':sortDir==='asc','fa-caret-up':sortDir==='desc'}"></i>
+        </th>
+        <th v-on:click="doSort('privateIp')">Private IP &nbsp;
+          <i class="fa" v-if="sortKey === 'privateIp'" v-bind:class="{'fa-caret-down':sortDir==='asc','fa-caret-up':sortDir==='desc'}"></i>
+        </th>
       </tr>
     </thead>
     <tbody v-for="instance in instanceData" v-bind:key="instance.instanceId">
       <tr class="instanceData" v-on:click="toggleDetails(instance.instanceId)">
         <td>
-          <i :id="'caret' + instance.instanceId" class="fa fa-caret-right"></i> &nbsp;
+          <i class="fa" v-bind:class="{'fa-caret-right':!details[instance.instanceId],'fa-caret-down':details[instance.instanceId]}"></i> &nbsp;
           {{ instance.name }}
         </td>
         <td>{{ instance.instanceId }}</td>
@@ -31,7 +45,7 @@
         <td>{{ instance.publicIp }}</td>
         <td>{{ instance.privateIp }}</td>
       </tr>
-      <tr :id="instance.instanceId" style="display: none">
+      <tr v-if="details[instance.instanceId]">
         <td colspan=7>
           SSH Connect as
           <select class="select" :id="'sshUser' + instance.instanceId">
@@ -53,12 +67,6 @@
         </td>
       </tr>
     </tbody>
-    <tbody id="regionError">
-      <tr>
-        <td colspan=7 id="regionErrorMessage">
-        </td>
-      </tr>
-    </tbody>
   </table>
 </template>
 
@@ -76,6 +84,7 @@ export default {
         'centos',
         'root'
       ],
+      details: {},
       orgId: null,
       awsRegionId: null,
       instances: [],
@@ -91,12 +100,12 @@ export default {
     };
   },
   mounted: function () {
-    ipcRenderer.on('updateTabData', (e, data) => {
+    ipcRenderer.on('awsregion.updateTabData', (e, data) => {
       if (data.tab === this.tab) {
         this.getData();
       }
     });
-    ipcRenderer.on('regionData', (e, data) => {
+    ipcRenderer.on('awsregion.regionData', (e, data) => {
       if (this.rendered === false) {
         this.tab = data.tab;
         this.awsRegionId = data.awsRegion;
@@ -149,12 +158,6 @@ export default {
         this.sortDir = 'asc';
       }
       this.sortKey = field;
-      $('#regionHeaders i').removeClass('fa fa-caret-down fa-caret-up');
-      if (this.sortDir === 'asc') {
-        $('#regionHeaders #' + field + 'Sort').addClass('fa fa-caret-down');
-      } else {
-        $('#regionHeaders #' + field + 'Sort').addClass('fa fa-caret-up');
-      }
       this.instanceData = _.orderBy(this.instanceData, [instance => instance[field].toLowerCase()], [this.sortDir]);
     },
 
@@ -180,19 +183,21 @@ export default {
      * Open up region settings modal
      */
     regionSettings: function() {
-      ipcRenderer.send('regionSettings', {org: this.orgId, awsRegion: this.awsRegionId, instances: this.instances, tab: this.tab});
+      const data = {};
+      data.org = this.org._id;
+      data.type = 'orgSettings';
+      data.regionSettings = this.awsRegion;
+      ipcRenderer.send('mainview.openTab', data);
     },
 
     /**
      * Show details for a specific instance row
      */
     toggleDetails: function(instanceId) {
-      if ($('#tab' + this.tab + ' #caret' + instanceId).hasClass('fa-caret-right')) {
-        $('#tab' + this.tab + ' #' + instanceId).show();
-        $('#tab' + this.tab + ' #caret' + instanceId).removeClass('fa-caret-right').addClass('fa-caret-down');
+      if (this.details[instanceId]) {
+        this.$set(this.details, instanceId, false);
       } else {
-        $('#tab' + this.tab + ' #' + instanceId).hide();
-        $('#tab' + this.tab + ' #caret' + instanceId).removeClass('fa-caret-down').addClass('fa-caret-right');
+        this.$set(this.details, instanceId, true);
       }
     },
 
@@ -237,12 +242,10 @@ export default {
         newTemp,
         { upsert: true });
       this.getData();
-      ipcRenderer.send('openTab', data);
+      ipcRenderer.send('mainview.openTab', data);
     },
     regionData: function() {
       const vue = this;
-      $('#regionError').hide();
-      $('#regionErrorMessage').html('');
 
       AWS.config.update({
         region: this.awsRegion.region,
@@ -253,8 +256,7 @@ export default {
       const ec2 = new AWS.EC2();
       ec2.describeInstances(function(err, data) {
         if (err) {
-          $('#regionError').show();
-          $('#regionErrorMessage').html(err.message);
+          ipcRenderer.send('alertbox.show', {type: 'message', error: true, msg: err.message});
         } else {
           const instances = [];
           _.each(data.Reservations, (reservationData) => {

@@ -13,17 +13,16 @@
               <td><img src="../../assets/256x256.png" /></td>
               <td>
                 Author:<br />
-                License:<br />
                 Version:<br />
               </td>
               <td>
                 Rick Baker</br>
-                GNU GPLv3</br>
                 {{ version }}</br>
               </td>
             </tr>
           </table>
           <div class="text-center">
+            Copyright &copy; Rick Baker 2017
             <button v-on:click="home()" class="btn btn-sm btn-success">
               <i class="fa fa-anchor"> Opshell Home</i>
             </button>
