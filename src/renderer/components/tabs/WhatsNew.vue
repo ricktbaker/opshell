@@ -36,9 +36,18 @@ export default {
   data: function() {
     return {
       versions: {},
-      currentVersion: '0.0.8',
+      currentVersion: '0.0.9',
       changes:
       [
+        {
+          'version': '0.0.9',
+          'releaseDate': '2017-10-10',
+          'added': [],
+          'fixed': [
+            'Import / Update Keys button was not popping up file select box'
+          ],
+          'changed': []
+        },
         {
           'version': '0.0.8',
           'releaseDate': '2017-10-09',

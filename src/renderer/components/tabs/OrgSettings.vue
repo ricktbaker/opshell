@@ -96,12 +96,11 @@
               <td>{{ key.keyName }}</td>
               <td>
                 {{ key.value ? 'Yes' : 'No'}}
-                <button class="btn btn-success btn-sm btn-file pull-right">
-                  <i class="fa fa-save"></i>
-                  <span v-if="!key.value">Import Key</span>
-                  <span v-else>Update Key</span>
-                  <input type="file" @change="onFileChange($event, awsRegion, key.keyName)" style="display: none;">
-                </button>
+                <label class="btn btn-success btn-sm btn-file pull-right">
+                  <span v-if="!key.value"><i class="fa fa-save"></i> Import Key</span>
+                  <span v-else><i class="fa fa-save"></i> Update Key</span>
+                  <input type="file" @change="onFileChange($event, awsRegion, key.keyName)" style="display: none">
+                </label>
               </td>
             </tr>
           </tbody>
@@ -140,12 +139,11 @@
               <td>{{ key.keyName }}</td>
               <td>
                 {{ key.value ? 'Yes' : 'No'}}
-                <button class="btn btn-success btn-sm btn-file pull-right">
-                  <i class="fa fa-save"></i>
-                  <span v-if="!key.value">Import Key</span>
-                  <span v-else>Update Key</span>
+                <label class="btn btn-success btn-sm btn-file pull-right">
+                  <span v-if="!key.value"><i class="fa fa-save"></i> Import Key</span>
+                  <span v-else><i class="fa fa-save"></i> Update Key</span>
                   <input type="file" @change="onFileChange($event, awsRegion, key.keyName)" style="display: none;">
-                </button>
+                </label>
               </td>
             </tr>
           </tbody>

@@ -1,6 +1,10 @@
 # Opshell Changelog
 All notable changes to this project will be documented in this file.
 
+### [0.0.9] - 2017-10-10
+### Fixed
+- Import / Update Keys was not popping up file selection box
+
 ## [0.0.8] - 2017-10-08
 ### Fixed
 - SSH through a bastion host was not working properly due to a change in 0.0.7
