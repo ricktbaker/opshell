@@ -3,7 +3,7 @@
   "version": "0.0.9",
   "author": "rickbaker <rick@ricktbaker.com>",
   "description": "Ops Helper for quickly working with AWS instances across multiple regions.",
-  "license": "GPL-3.0",
+  "license": "MIT",
   "main": "./dist/electron/main.js",
   "repository" :
   { "type" : "git"
