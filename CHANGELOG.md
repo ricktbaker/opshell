@@ -1,7 +1,13 @@
 # Opshell Changelog
 All notable changes to this project will be documented in this file.
 
-### [0.0.9] - 2017-10-10
+## [0.0.10] - 2017-10-?
+### Fixed
+- SSH Window was covering top tabs if a aws region tab was in an overflow scroll state
+- SSH tab size was much wider than the actual app window
+- Several issues with SSH connections after removing jquery selectors.
+
+## [0.0.9] - 2017-10-10
 ### Fixed
 - Import / Update Keys was not popping up file selection box
 

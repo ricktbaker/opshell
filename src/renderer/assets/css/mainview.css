@@ -13,10 +13,13 @@
   overflow-x: auto;
   width: 95vw;
   border: none;
-  background: #444444;
   border-left: 1px solid #000000;
   height: 40px;
   border-bottom: none !important;
+}
+
+#mainView .tabs-background {
+  background: #444444;
 }
 
 li {
@@ -24,7 +27,7 @@ li {
 }
 
 .tab-content {
-  margin: 45px 5px 5px 5px;
+  margin: 45px 5px 5px 5px !important;
 }
 
 .nav-tabs>li>a {

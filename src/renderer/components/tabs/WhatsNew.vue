@@ -36,9 +36,20 @@ export default {
   data: function() {
     return {
       versions: {},
-      currentVersion: '0.0.9',
+      currentVersion: '0.0.10',
       changes:
       [
+        {
+          'version': '0.0.10',
+          'releaseDate': '2017-10-12',
+          'added': [],
+          'fixed': [
+            'SSH Window was covering top tabs if a aws region tab was in an overflow scroll state',
+            'SSH tab size was much wider than the actual app window',
+            'Several issues with SSH connections after removing jquery selectors'
+          ],
+          'changed': []
+        },
         {
           'version': '0.0.9',
           'releaseDate': '2017-10-10',

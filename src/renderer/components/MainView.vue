@@ -1,6 +1,6 @@
 <template>
   <div class="col" id="mainView">
-    <ul class="nav nav-tabs" role="tablist" id="tabs">
+    <ul class="nav nav-tabs" role="tablist" id="tabs" v-bind:class="{'tabs-background':tabs.length}">
       <li v-for="tab in tabs" class="nav-item" v-bind:key="tab.id">
         <a class="nav-link" role="tab" :href="'#tab' + tab.id" data-toggle="tab">
           <table class="navtable">
@@ -30,7 +30,7 @@
     <div class="tab-content">
       <div v-for="tab in tabs" v-bind:key="tab.id" role="tabpanel" class="tab-pane fade" :id="'tab' + tab.id">
         <awsRegion v-if="tab.type === 'awsRegion'"></awsRegion>
-        <sshConnection class="terminal" v-if="tab.type === 'ssh'"></sshConnection>
+        <sshConnection v-if="tab.type === 'ssh'" class="sshterm"></sshConnection>
         <orgSettings v-if="tab.type === 'orgSettings'"></orgSettings>
         <whatsNew v-if="tab.type === 'whatsNew'"></whatsNew>
       </div>

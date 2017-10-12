@@ -35,6 +35,14 @@
  *  Default style for xterm.js
  */
 
+ #serverInfo {
+  margin-top: 45px;
+  height: 25px;
+  background: #222222;
+  color: #666666 !important;
+  font-family: 'Source Code Pro', monospace;
+  font-size: 12px;
+ }
  .terminal {
   background-color: #000;
   color: #fff;
@@ -45,6 +53,9 @@
   user-select: none;
   -ms-user-select: none;
   -webkit-user-select: none;
+  margin-top: 0px;
+  width: calc(100vw - 260px);
+  height: 95vh;
 }
 
 .terminal.focus,

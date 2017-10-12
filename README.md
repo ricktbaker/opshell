@@ -23,11 +23,11 @@ Primary Components:
 
 [View the Current ChangeLog](CHANGELOG.md)
 
-#### Downloads - Version 0.0.9
+#### Downloads - Version 0.0.10
 
-[Mac](http://opshell.ricktbaker.com/opshell-0.0.9.dmg)
+[Mac](http://opshell.ricktbaker.com/opshell-0.0.10.dmg)
 
-[Windows](http://opshell.ricktbaker.com/opshell-Setup-0.0.9.exe) (Requires OpenSSH to be installed and ssh.exe to be in PATH)
+[Windows](http://opshell.ricktbaker.com/opshell-Setup-0.0.10.exe) (Requires OpenSSH to be installed and ssh.exe to be in PATH)
 
 Linux Package coming soon
 

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div style="height: 25px; background: #222222; color: #666666 !important;width: 100vw;" id="serverInfo">
+    <div id="serverInfo">
       {{instance.name}}
       <span title="instance id">: {{instance.instanceId}}</span>
       <span v-if="instance.publicIp" title="public ip">: {{instance.publicIp}}</span>
@@ -11,7 +11,7 @@
         <i class="fa fa-minus" title="Decreate font size" v-on:click="fontSize('-')"></i>
       </span>
     </div>
-    <div :id="'terminal' + tab" style="height: 95vh; width: 100vw;"></div>
+    <div :id="'terminal' + tab" class="terminal"></div>
   </div>
 </template>
 <<script>
@@ -56,7 +56,13 @@ export default {
         var term = this.term;
         var parentElementStyle = window.getComputedStyle(term.element.parentElement);
         var parentElementHeight = parseInt(parentElementStyle.getPropertyValue('height'));
-        var parentElementWidth = Math.max(0, parseInt(parentElementStyle.getPropertyValue('width')) - 17);
+        var parentElementWidth = Math.max(0, parseInt(parentElementStyle.getPropertyValue('width')));
+        if (!$('#leftMenuExpanded').is(':visible')) {
+          $('#terminal' + this.tab + ' .terminal').css('width', 'calc(100vw - 50px)');
+          parentElementWidth += 200;
+        } else {
+          $('#terminal' + this.tab + ' .terminal').css('width', 'calc(100vw - 250px)');
+        }
         var elementStyle = window.getComputedStyle(term.element);
         var elementPaddingVer = parseInt(elementStyle.getPropertyValue('padding-top')) + parseInt(elementStyle.getPropertyValue('padding-bottom'));
         var elementPaddingHor = parseInt(elementStyle.getPropertyValue('padding-right')) + parseInt(elementStyle.getPropertyValue('padding-left'));
@@ -77,17 +83,12 @@ export default {
         subjectRow.innerHTML = contentBuffer;
 
         rows = parseInt(availableHeight / characterHeight) - 3;
-        cols = parseInt(availableWidth / characterWidth) - 5;
-        if ($('#leftMenuExpanded').is(':visible')) {
-          cols = cols - 25;
-        }
-
+        cols = parseInt(availableWidth / characterWidth);
         term.resize(cols, rows);
         this.ptyProcess.resize(cols, rows);
+        term.refresh(0, term.rows - 1);
       } catch (err) {
-        console.log(err);
       }
-      this.term.refresh(0, 200);
     },
     ssh: async function (server) {
       const vue = this;
@@ -104,7 +105,7 @@ export default {
       }
       var shell = os.platform() === 'win32' ? 'powershell.exe' : 'bash';
 
-      this.ptyProcess = pty.spawn(shell, [], {
+      this.ptyProcess = pty.fork(shell, [], {
         name: 'xterm-color',
         cols: 80,
         rows: 10,

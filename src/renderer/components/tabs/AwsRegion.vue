@@ -46,18 +46,15 @@
       <tr v-if="details[instance.instanceId]">
         <td colspan=7>
           SSH Connect as
-          <select class="select" :id="'sshUser' + instance.instanceId">
-            <option v-if="user === instance.defaultUser" selected="selected" v-for="user in awsUsers" :value="user" :key="user">{{ user }}</option>
-            <option v-if="user !== instance.defaultUser" v-for="user in awsUsers" :value="user" :key="user">{{ user }}</option>
+          <select class="select" v-model="sshConnect[instance.instanceId]['user']">
+            <option v-for="user in sshUsers" :value="user" :key="user">{{ user }}</option>
           </select>
           to
-          <select class="select" :id="'sshIp' + instance.instanceId">
-            <option v-if="instance.privateIp && instance.privateIp === instance.defaultIP" selected="selected" :value="instance.privateIp">Private IP</option>
-            <option v-if="instance.privateIp && instance.privateIp !== instance.defaultIP" :value="instance.privateIp">Private IP</option>
-            <option v-if="instance.publicIp && instance.publicIp === instance.defaultIp" selected="selected" :value="instance.publicIp">Public IP</option>
-            <option v-if="instance.publicIp && instance.publicIp !== instance.defaultIp" :value="instance.publicIp">Public IP</option>
+          <select class="select" v-model="sshConnect[instance.instanceId]['ip']">
+            <option v-if="instance.privateIp" :value="instance.privateIp">Private IP</option>
+            <option v-if="instance.publicIp" :value="instance.publicIp">Public IP</option>
           </select>
-          <select v-if="awsRegion.useBastion && awsRegion.bastionHost != instance.instanceId" class="select" :id="'sshBastion' + instance.instanceId">
+          <select v-if="awsRegion.useBastion && awsRegion.bastionHost != instance.instanceId" class="select" v-model="sshConnect[instance.instanceId]['bastion']">
             <option value="1">Using Bastion Host</option>
             <option value="0">Not Using Bastion Host</option>
           </select>
@@ -76,12 +73,13 @@ export default {
   name: 'awsRegion',
   data: function() {
     return {
-      awsUsers: [
+      defaultUsers: [
         'ec2-user',
         'ubuntu',
         'centos',
         'root'
       ],
+      sshUsers: [],
       details: {},
       orgId: null,
       awsRegionId: null,
@@ -94,7 +92,8 @@ export default {
       rendered: false,
       tempData: [],
       sortKey: null,
-      sortDir: null
+      sortDir: null,
+      sshConnect: []
     };
   },
   mounted: function () {
@@ -167,9 +166,10 @@ export default {
       this.awsRegion = await this.$db.awsRegions.cfindOne({_id: this.awsRegionId}).exec();
       const tempData = await this.$db.tempData.cfind({org: this.orgId, region: this.awsRegionId, type: 'region'}).exec();
       this.tempData = new Map(tempData.map(element => [element.name, element]));
+      this.sshUsers = this.defaultUsers;
       _.each(this.awsRegion.keys, (key) => {
         if (key.custom) {
-          this.awsUsers.push(key.keyName);
+          this.sshUsers.push(key.keyName);
         }
       });
       if (typeof (cb) === 'function') {
@@ -203,8 +203,9 @@ export default {
      * Initiate an SSH connection in a new tab
      */
     ssh: async function(instance) {
+      console.log(JSON.stringify(this.sshConnect[instance.instanceId], null, 2));
       let bastionHost;
-      if ($('#sshBastion' + instance.instanceId).val()) {
+      if (this.sshConnect[instance.instanceId]) {
         _.each(this.instances, (inst) => {
           if (this.awsRegion.bastionHost === inst.instanceId) {
             bastionHost = inst;
@@ -217,8 +218,8 @@ export default {
         awsRegion: this.awsRegionId,
         instance: instance,
         tab: instance.tab,
-        user: $('#sshUser' + instance.instanceId).val(),
-        ip: $('#sshIp' + instance.instanceId).val(),
+        user: this.sshConnect[instance.instanceId]['user'],
+        ip: this.sshConnect[instance.instanceId]['ip'],
         bastionHost: bastionHost
       };
       const newTemp = {
@@ -277,6 +278,11 @@ export default {
               instance.defaultIp = tempData ? tempData.ip : null;
             });
             instances.push(instance);
+            vue.$set(vue.sshConnect, instance.instanceId, {
+              user: instance.defaultUser,
+              ip: instance.defaultIp,
+              bastion: vue.awsRegion.useBastion ? 1 : 0
+            });
           });
           vue.instances = instances;
           vue.instanceData = vue.instances;
