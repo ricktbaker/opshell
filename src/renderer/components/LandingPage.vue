@@ -1,5 +1,6 @@
 <template>
   <div id="wrapper">
+    <!-- <link id="theme" rel="stylesheet" href="static/style1.css"> -->
     <alertBox></alertBox>
     <div class="row" style="margin: 0">
       <leftMenu></leftMenu>

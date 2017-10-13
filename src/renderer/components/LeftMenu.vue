@@ -41,6 +41,7 @@ export default {
   methods: {
     toggleOrg() {
       $('#leftMenuExpanded').toggle();
+      // $('link#theme').attr('href', 'static/style2.css');
       if ($('#leftMenuExpanded').is(':visible')) {
         $('#mainView').css('padding-left', '245px');
         $('#mainView #tabs').css('width', '80vw');

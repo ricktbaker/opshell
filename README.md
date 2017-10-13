@@ -25,7 +25,7 @@ Primary Components:
 
 #### Downloads
 
-Instead of maintaining download versions in two different places, you can find downloads for Mac and Windows on the [Opshell Website](http://opshell.ricktbaker.com)
+The easiest way to use this project is to download one of the prebuild packages. Instead of maintaining download versions in two different places, you can find downloads for Mac and Windows on the [Opshell Website](http://opshell.ricktbaker.com)
 
 Linux Package coming soon.
 
