@@ -2,7 +2,7 @@
 <br />
 <img align="center" src="opshell.png" alt="Opshell">
 <br />
-<a href="http://ricktbaker.com/opshell">Website</a>
+<a href="http://opshell.ricktbaker.com">Website</a>
 <br>
 <br>
 </div>
