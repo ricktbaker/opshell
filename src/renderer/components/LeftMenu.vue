@@ -23,7 +23,7 @@ export default {
   mounted: function() {
     $('#leftMenuExpanded').hide();
     const vue = this;
-    var url = 'http://opshell.ricktbaker.com/release.json';
+    var url = 'http://opshelldownloads.ricktbaker.com/release.json';
     request({
       url: url,
       json: true

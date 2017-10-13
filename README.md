@@ -23,11 +23,9 @@ Primary Components:
 
 [View the Current ChangeLog](CHANGELOG.md)
 
-#### Downloads - Version 0.0.10
+#### Downloads
 
-[Mac](http://opshelldownloads.ricktbaker.com/opshell-0.0.10.dmg)
-
-[Windows](http://opshelldownloads.ricktbaker.com/opshell-Setup-0.0.10.exe) (Requires OpenSSH to be installed and ssh.exe to be in PATH)
+Instead of maintaining download versions in two different places, you can find downloads for Mac and Windows on the [Opshell Website](http://opshell.ricktbaker.com)
 
 Linux Package coming soon
 
