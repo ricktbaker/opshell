@@ -27,7 +27,9 @@ Primary Components:
 
 Instead of maintaining download versions in two different places, you can find downloads for Mac and Windows on the [Opshell Website](http://opshell.ricktbaker.com)
 
-Linux Package coming soon
+Linux Package coming soon.
+
+If you'd rather just clone the repo and build from source instead of downloading a prebuilt package, you're more than welcome to do so.
 
 #### Clone Repo and Build Setup for Mac/Linux
 ``` bash
