@@ -1,84 +1,27 @@
 @import url('https://fonts.googleapis.com/css?family=Montserrat:100,300,400');
 body {
-  background: #333333 !important;
   font-family: 'Montserrat', sans-serif;
   font-size: 14px;
   font-weight: 300;
 }
-
-
-/* Adding !important forces the browser to overwrite the default style applied by Bootstrap */
-
 html,
 body,
 #app {
   height: 100%;
-  background: #222222;
   display: flex;
 }
-
 #wrapper {
   width: 100vw;
   height: 100vh;
 }
-
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
-
-.modal {
-  border: 1px solid white;
-}
-
-.modal-content .modal-header {
-  color: #bbbbbb;
-  background: #444444;
-  border-bottom: 1px solid #777777;
-  margin: 0;
-  padding: 5px 10px 5px 10px;
-}
-
-.modal-content .modal-header h5 {
-  font-size: 14px;
-}
-
-.modal-content .modal-body {
-  color: #bbbbbb;
-  background: #444444;
-  border: none;
-  margin-bottom: 0;
-  padding-bottom: 0;
-}
-
-.modal-content .modal-footer {
-  margin: 0;
-  padding: 0;
-  color: black;
-  background: #ddaaaa;
-  border: none;
-}
-
-.modal-content .modal-body input {
-  background: #000000;
-  color: #aaaaaa;
-}
-
 .fa {
-  color: white;
   cursor: pointer;
 }
-
-input {
-  border: #555555 !important;
-}
-
-.table-striped>tbody>tr:nth-child(odd)>td,
-.table-striped>tbody>tr:nth-child(odd)>th {
-	background-color: #111111;
-}
-
-.table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
-  background-color: #444444;
+.btn:active {
+  border: none;
 }

@@ -3,33 +3,26 @@
   position: fixed;
   z-index: 500;
   margin: 0;
-  color: #dddddd;
   text-align: center;
-  background: #222222;
-  border-bottom: 1px solid #5bc0de;
   height: 35px;
-  box-shadow: 0px 5px 5px #000000;
 }
 #dismissAlert {
   position: absolute;
   right:0;
   top:0;
   z-index: 600;
-  background: #5bc0de;
   height: 34px;
   margin: 0;
-  color: white;
   padding: 5px 10px;
   cursor: pointer;
 }
 #alertBox .form-control, #alertBox .form-control:focus {
-  background: #444444;
-  color: #aaaaaa;
   height: 25px;
 }
 #alertBox .btn {
   height: 25px;
 }
 #alertBox .error {
-  color: red !important;
+}
+#alertBox .btn-success {
 }

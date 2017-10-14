@@ -58,7 +58,7 @@
             <option value="1">Using Bastion Host</option>
             <option value="0">Not Using Bastion Host</option>
           </select>
-          <button class="btn btn-success btn-sm" style="cursor: pointer; font-size: 11px; padding: 1px 5px" v-on:click="ssh(instance)">Open SSH Connection</button>
+          <button class="btn btn-default btn-sm btn-ssh" v-on:click="ssh(instance)">Open SSH Connection</button>
         </td>
       </tr>
     </tbody>

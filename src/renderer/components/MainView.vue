@@ -33,6 +33,7 @@
         <sshConnection v-if="tab.type === 'ssh'" class="sshterm"></sshConnection>
         <orgSettings v-if="tab.type === 'orgSettings'"></orgSettings>
         <whatsNew v-if="tab.type === 'whatsNew'"></whatsNew>
+        <gettingStarted v-if="tab.type === 'gettingStarted'"></gettingStarted>
       </div>
     </div>
   </div>
@@ -45,6 +46,7 @@ import AwsRegion from './tabs/AwsRegion.vue';
 import SshConnection from './tabs/SshConnection.vue';
 import OrgSettings from './tabs/OrgSettings.vue';
 import WhatsNew from './tabs/WhatsNew.vue';
+import GettingStarted from './tabs/GettingStarted.vue';
 import compareVersion from 'compare-versions';
 
 export default {
@@ -86,7 +88,11 @@ export default {
       } else if (data.type === 'whatsNew') {
         obj.org = 'Opshell';
         obj.name = 'What\'s New';
-        obj.icon = 'fa-newspaper-o';
+        obj.icon = 'fa-bullhorn';
+      } else if (data.type === 'gettingStarted') {
+        obj.org = 'Opshell';
+        obj.name = 'Getting Started';
+        obj.icon = 'fa-info';
       }
       this.tabs.push(obj);
       setTimeout(() => {
@@ -105,26 +111,33 @@ export default {
       }
     });
 
-    // Should we display the whats new tab?
-    var pjson = require('../../../package.json');
+    // Should we display the whats new tab or the getting started tab?
+    const temp = await this.$db.tempData.cfindOne({type: 'intro'}).exec();
+    if (temp && temp.seen) {
+      var pjson = require('../../../package.json');
 
-    const temp = await this.$db.tempData.cfindOne({type: 'whatsnew'}).exec();
+      const temp = await this.$db.tempData.cfindOne({type: 'whatsnew'}).exec();
 
-    let seenVersion;
-    if (!temp) {
-      seenVersion = '0';
+      let seenVersion;
+      if (!temp) {
+        seenVersion = '0';
+      } else {
+        seenVersion = temp.version;
+      }
+
+      if (compareVersion(pjson.version, seenVersion) > 0) {
+        const data = {};
+        data.type = 'whatsNew';
+        ipcRenderer.send('mainview.openTab', data);
+      }
     } else {
-      seenVersion = temp.version;
-    }
-
-    if (compareVersion(pjson.version, seenVersion) > 0) {
       const data = {};
-      data.type = 'whatsNew';
+      data.type = 'gettingStarted';
       ipcRenderer.send('mainview.openTab', data);
     }
   },
   components: {
-    AwsRegion, SshConnection, OrgSettings, WhatsNew
+    AwsRegion, SshConnection, OrgSettings, WhatsNew, GettingStarted
   },
   methods: {
     /**

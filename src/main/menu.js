@@ -1,4 +1,4 @@
-const {app, Menu} = require('electron');
+const {Menu} = require('electron');
 
 const template = [
   {
@@ -65,10 +65,10 @@ const template = [
 
 if (process.platform === 'darwin') {
   template.unshift({
-    label: app.getName(),
+    label: 'Opshell',
     submenu: [
       {
-        label: 'About',
+        label: 'About Opshell',
         click: function (menuItem, currentWindow) {
           currentWindow.webContents.send('aboutWindow');
         }
@@ -89,6 +89,48 @@ if (process.platform === 'darwin') {
       {role: 'unhide'},
       {type: 'separator'},
       {role: 'quit'}
+    ]
+  });
+  template.push({
+    label: 'Help',
+    submenu: [
+      {
+        label: 'Getting Started',
+        click: function (menuItem, currentWindow) {
+          const data = {};
+          data.type = 'gettingStarted';
+          currentWindow.webContents.send('mainview.openTab', data);
+        }
+      }
+    ]
+  });
+}
+if (process.platform === 'win32') {
+  template.unshift({
+    label: 'Help',
+    submenu: [
+      {
+        label: 'About Opshell',
+        click: function (menuItem, currentWindow) {
+          currentWindow.webContents.send('aboutWindow');
+        }
+      },
+      {
+        label: 'What\'s New',
+        click: function (menuItem, currentWindow) {
+          const data = {};
+          data.type = 'whatsNew';
+          currentWindow.webContents.send('mainview.openTab', data);
+        }
+      },
+      {
+        label: 'Getting Started',
+        click: function (menuItem, currentWindow) {
+          const data = {};
+          data.type = 'gettingStarted';
+          currentWindow.webContents.send('mainview.openTab', data);
+        }
+      }
     ]
   });
 }

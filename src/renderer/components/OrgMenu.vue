@@ -14,8 +14,8 @@
     </div>
 
     <div id="orgDetails" class="details" v-if="orgDetails">
-      <div id="orgSettings">
-        <button v-on:click="orgSettings" class="btn btn-sm">
+      <div id="orgMenu">
+        <button v-on:click="orgSettings" class="btn btn-sm btn-default">
           <i class="fa fa-cog"></i>
           Configure Org
         </button>
@@ -95,6 +95,7 @@ export default {
             if (this.org) {
               this.awsRegions = await this.$db.awsRegions.cfind({org: this.org._id}).exec();
               this.orgDetails = true;
+              this.awsRegionContent = true;
             } else {
               this.orgDetails = false;
             }

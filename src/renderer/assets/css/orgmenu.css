@@ -1,6 +1,4 @@
 .orgSelect {
-  background: #000000;
-  color: #aaaaaa;
   font-size: 13px;
   margin: 0;
   padding: 0px 10px;
@@ -15,8 +13,6 @@
   position: fixed;
   width: 200px;
   height: 100vh;
-  background: #333333;
-  color: white;
   z-index: 1;
   overflow: auto;
 }
@@ -25,7 +21,6 @@
   font-family: 'Montserrat', sans-serif;
   font-size: 12px;
   font-weight: 100;
-  background: #333333;
   width: 100%;
   margin: 0;
   padding: 10px 0 10px 0;
@@ -37,7 +32,6 @@
   font-family: 'Montserrat', sans-serif;
   font-size: 12px;
   font-weight: 100;
-  background: #444444;
   width: 100%;
   margin: 0;
   padding: 10px 0 10px 0;
@@ -51,9 +45,8 @@
   font-size: 13px;
 }
 
-#leftMenuExpanded #orgSettings {
+#leftMenuExpanded #orgMenu {
   width: 100wv;
-  border-bottom: 1px solid #cccccc;
   text-align: center;
   margin-bottom: 5px;
   padding-bottom: 5px;
@@ -65,19 +58,13 @@
 
 #leftMenuExpanded #awsRegionContent div:hover {
   cursor: pointer;
-  background: black;
 }
 
-#leftMenuExpanded #orgSettings button {
+#leftMenuExpanded #orgMenu button {
   width: 95%;
   padding: 2px 5px;
   font-size: 12px;
   cursor: pointer;
-  background: #666666;
-  color: #cccccc;
 }
 
-#leftMenuExpanded #orgSettings i {
-  color: #cccccc;
-}
 

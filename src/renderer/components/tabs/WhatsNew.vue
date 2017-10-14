@@ -36,9 +36,24 @@ export default {
   data: function() {
     return {
       versions: {},
-      currentVersion: '0.0.10',
+      currentVersion: '0.1.0',
       changes:
       [
+        {
+          'version': '0.1.0',
+          'releaseDate': '2017-10-13',
+          'added': [
+            'Added a Getting Started tab with some basic instructions on first usage',
+            'Added a Help Tab for Windows which will have the About, What\'s New and Getting Started Menu Items',
+            'Added a Help Tab for Mac which will have the Getting Started Menu item'
+          ],
+          'fixed': [
+            'More changes to keep ssh term window from covering nav tabs'
+          ],
+          'changed': [
+            'Cleaning up CSS and moving all colors to a theme CSS file to prepare for theme selection'
+          ]
+        },
         {
           'version': '0.0.10',
           'releaseDate': '2017-10-12',

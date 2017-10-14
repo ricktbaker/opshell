@@ -1,7 +1,17 @@
 # Opshell Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.0.10] - 2017-10-?
+## [0.1.0] - 2017-10-13
+### Fixed
+- More changes to keep ssh term window from covering nav tabs.
+### Added
+- Added a Getting Started tab with some basic instructions on first usage.
+- Added a Help Tab for Windows which will have the About, What's New and Getting Started Menu Items.
+- Added a Help Tab for Mac which will have the Getting Started Menu item.
+### Changed
+- Cleaning up CSS and moving all colors to a theme CSS file to prepare for theme selection
+
+## [0.0.10] - 2017-10-11
 ### Fixed
 - SSH Window was covering top tabs if a aws region tab was in an overflow scroll state
 - SSH tab size was much wider than the actual app window

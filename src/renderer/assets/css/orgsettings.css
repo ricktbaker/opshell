@@ -12,21 +12,17 @@
 
 #orgSettings .regionBordered {
   border-radius: 5px;
-  box-shadow: 4px 4px 8px #000;
-  border: 1px solid #666666;
   padding: 10px;
   margin: 5px 0px;
 }
 
 #orgSettings .regionKeys {
-  background: #444444;
   margin: 0;
   padding: 5px 10px;
   margin-top: 10px;
 }
 
 #orgSettings .regionConfig {
-  background: #444444;
   margin: 0;
   padding: 0 0 10px 0;
   margin-top: 10px;
@@ -35,8 +31,6 @@
 #orgSettings .input-sm {
   height: 25px;
   font-size: 13px;
-  color: #aaaaaa;
-  background: #000000;
 }
 
 #orgSettings .btn-sm {
@@ -46,8 +40,6 @@
 }
 
 #orgSettings .newregion-select {
-  background: #000000;
-  color: #aaaaaa;
   font-size: 13px;
   margin: 0;
   padding: 0px 10px;
@@ -58,8 +50,6 @@
 }
 
 #orgSettings .userSelect {
-  background: #000000 !important;
-  color: #aaaaaa !important;
   font-size: 13px;
   margin: 0;
   padding: 0px 10px;
@@ -69,7 +59,6 @@
 }
 
 #orgSettings .keystable {
-  border-top: 1px solid #888888;
   margin-top: 10px;
   width: 100%;
 }
@@ -88,13 +77,4 @@
   position: fixed;
   bottom: 0;
   right: 25px;
-}
-
-#orgSettings .btn-default {
-  background: darkslategrey !important;
-  color: white !important;
-}
-
-#orgSettings .btn-default:hover {
-  background: darkgrey !important;
 }

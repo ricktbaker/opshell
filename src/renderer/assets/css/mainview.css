@@ -1,10 +1,8 @@
 #mainView {
   padding-left: 45px;
   height: 100%;
-  background: #222222;
   margin-right: 0;
   margin-left: 0;
-  color: #aaaaaa;
 }
 
 #mainView #tabs {
@@ -13,13 +11,11 @@
   overflow-x: auto;
   width: 95vw;
   border: none;
-  border-left: 1px solid #000000;
   height: 40px;
   border-bottom: none !important;
 }
 
 #mainView .tabs-background {
-  background: #444444;
 }
 
 li {
@@ -31,8 +27,6 @@ li {
 }
 
 .nav-tabs>li>a {
-  background-color: #555555;
-  color:#fff;
   height: 40px;
   border: none !important;
   font-size: 11px;
@@ -66,12 +60,9 @@ li {
   border: none;
 }
 .nav-tabs>li>a:hover i{
-  color: white;
   border: none;
 }
 
 .nav-tabs > li > a.active{
-  background: #222222 !important;
-  color: #aaaaaa !important;
   text-decoration: none;
 }

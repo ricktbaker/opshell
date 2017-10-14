@@ -10,7 +10,7 @@
           <option value="" selected>Select New Region</option>
           <option v-if="regionAvailable(awsRegion.code)" v-for="awsRegion in awsRegionCodes" :value="awsRegion.code" :key="awsRegion.code">{{ awsRegion.code }} : {{ awsRegion.name }}</option>
         </select>
-        <button class="btn btn-sm btn-success" v-on:click="addRegion()">
+        <button class="btn btn-sm" v-bind:class="{'btn-default':!newRegion,'btn-success':newRegion}" v-on:click="addRegion()">
           <i class="fa fa-plus"></i> Add Region
         </button>
         <button v-if="newRegion" class="btn btn-sm btn-info" v-on:click="newRegion = false">
@@ -62,7 +62,7 @@
             </div>
           </div>
           <div class="text-center">
-            <button v-on:click="updateAwsRegion(awsRegion)" type="button" class="btn btn-primary btn-sm">
+            <button v-on:click="updateAwsRegion(awsRegion)" type="button" class="btn btn-success btn-sm">
               <i class="fa fa-save"></i>
               Update Config
             </button>
@@ -79,7 +79,7 @@
 
       <div class="regionKeys" v-if="regionKeys[awsRegion.region]">
         AWS Default User Keys
-        <button v-on:click="scanRegion(awsRegion)" class="pull-right btn btn-sm btn-primary">
+        <button v-on:click="scanRegion(awsRegion)" class="pull-right btn btn-sm btn-success">
           <i class="fa" v-bind:class="{'fa-spinner fa-spin fa-fw': scanning[awsRegion.region],'fa-key': !scanning[awsRegion.region]}"></i>
           Scan Region for Required Keys
         </button>
@@ -176,7 +176,7 @@
           </div>
         </div>
         <div class="text-center">
-          <button class="btn btn-sm btn-primary" v-on:click="saveRegionSettings(awsRegion)">
+          <button class="btn btn-sm btn-success" v-on:click="saveRegionSettings(awsRegion)">
             <i class="fa fa-save"></i> Save Settings
           </button>
           <button class="btn btn-sm btn-default" v-on:click="editRegion(awsRegion, 'settings')">

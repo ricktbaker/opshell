@@ -52,7 +52,7 @@ export default {
   },
   methods: {
     home: () => {
-      shell.openExternal('http://ricktbaker.com/opshell');
+      shell.openExternal('http://opshell.ricktbaker.com');
     },
     github: () => {
       shell.openExternal('https://github.com/ricktbaker/opshell/issues');

@@ -2,10 +2,10 @@
   <div class="col" id="left-menu">
     <i v-on:click="toggleOrg" class="fa fa-building-o fa-2x" title="Organizations"></i>
     <!-- <i data-target="#cloudSettings" data-toggle="modal" class="fa fa-cloud-download fa-lg" title="Cloud Settings" /> -->
-    <i v-if="!newVersion" v-on:click="openGithub" class="fa fa-github fa-2x" title="Github Repo"></i>
+    <i v-if="!newVersion" v-on:click="openGithub" class="fa fa-home fa-2x" title="Opshell Home"></i>
     <span v-if="newVersion" title="Newer version available" class="fa-stack">
       <i class="fa fa-star fa-stack" style="font-size: 1em !important; color: gold; position: absolute; margin-top: 3px; margin-left: 18px;"></i>
-      <i class="fa fa-github fa-stack-2x"></i>
+      <i class="fa fa-home fa-stack-2x"></i>
     </span>
   </div>
 </template>
@@ -52,7 +52,7 @@ export default {
       ipcRenderer.send('orgMenuToggle');
     },
     openGithub: () => {
-      shell.openExternal('https://github.com/ricktbaker/opshell');
+      shell.openExternal('http://opshell.ricktbaker.com');
     }
   }
 };
