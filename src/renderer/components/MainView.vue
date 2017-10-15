@@ -59,9 +59,6 @@ export default {
     };
   },
   mounted: async function() {
-    /**
-     * Open up a tab of the proper type
-     */
     ipcRenderer.on('mainview.closeTab', (e, tabId) => {
       this.closeTab(tabId);
     });

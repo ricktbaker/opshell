@@ -37,10 +37,10 @@ export default {
       if (data.type === 'message') {
         if (data.error) {
           this.isError = true;
-          this.typeAlert = true;
-          this.alertMessage = data.msg;
-          this.showAlert = true;
         }
+        this.typeAlert = true;
+        this.alertMessage = data.msg;
+        this.showAlert = true;
       }
       if (data.type === 'newOrg') {
         this.showAlert = true;

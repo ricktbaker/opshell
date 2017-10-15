@@ -36,9 +36,21 @@ export default {
   data: function() {
     return {
       versions: {},
-      currentVersion: '0.1.0',
+      currentVersion: '0.1.1',
       changes:
       [
+        {
+          'version': '0.1.1',
+          'releaseDate': '2017-10-13',
+          'added': [
+            'Added the ability to Export and Import Settings (orgs, regions, access keys, and ssh keys)'
+          ],
+          'fixed': [
+            'Fixed a menu order issue with Windows',
+            'If a bastion host was setup, it was always going to use it, even if you had chosen not to for a specific connection'
+          ],
+          'changed': []
+        },
         {
           'version': '0.1.0',
           'releaseDate': '2017-10-13',

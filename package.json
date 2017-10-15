@@ -1,13 +1,13 @@
 {
   "name": "opsshell",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "rickbaker <rick@ricktbaker.com>",
   "description": "Ops Helper for quickly working with AWS instances across multiple regions.",
   "license": "MIT",
   "main": "./dist/electron/main.js",
-  "repository" :
-  { "type" : "git"
-  , "url" : "https://github.com/ricktbaker/opshell.git"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ricktbaker/opshell.git"
   },
   "scripts": {
     "build": "node .electron-vue/build.js && electron-builder",
@@ -26,7 +26,7 @@
     "postinstall": "electron-builder install-app-deps"
   },
   "build": {
-    "productName": "opshell",
+    "productName": "Opshell",
     "appId": "org.simulatedgreg.electron-vue",
     "directories": {
       "output": "build"
@@ -60,10 +60,12 @@
     }
   },
   "dependencies": {
+    "archiver": "^2.1.0",
     "aws-sdk": "^2.122.0",
     "axios": "^0.16.1",
     "bootbox": "^4.4.0",
     "bootstrap": "4.0.0-alpha.6",
+    "chmodr": "^1.0.2",
     "compare-versions": "^3.1.0",
     "font-awesome": "^4.7.0",
     "fs": "^0.0.1-security",
@@ -72,11 +74,13 @@
     "lodash": "^4.17.4",
     "nedb": "^1.8.0",
     "nedb-promise": "^2.0.1",
+    "node-dir": "^0.1.17",
     "node-pty": "^0.7.0",
     "os": "^0.1.1",
     "path": "^0.12.7",
     "socket.io": "^2.0.3",
     "ssh2": "^0.5.5",
+    "unzipper": "^0.8.9",
     "vue": "^2.3.3",
     "vue-electron": "^1.0.6",
     "vue-router": "^2.5.3",

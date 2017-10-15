@@ -1,6 +1,14 @@
 # Opshell Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.1.1] - 2017-10-14
+### Fixed
+- Fixed a menu order issue with Windows.
+- If a bastion host was setup, it was always going to use it, even if you had chosen not to for a specific connection.
+### Added
+- Added the ability to Export and Import Settings (orgs, regions, access keys, and ssh keys)
+
+
 ## [0.1.0] - 2017-10-13
 ### Fixed
 - More changes to keep ssh term window from covering nav tabs.

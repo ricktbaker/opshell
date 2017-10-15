@@ -2,6 +2,23 @@ const {Menu} = require('electron');
 
 const template = [
   {
+    label: 'File',
+    submenu: [
+      {
+        label: 'Import Settings',
+        click: function (menuItem, currentWindow) {
+          currentWindow.webContents.send('landingpage.importSettings');
+        }
+      },
+      {
+        label: 'Export Settings',
+        click: function (menuItem, currentWindow) {
+          currentWindow.webContents.send('landingpage.exportSettings');
+        }
+      }
+    ]
+  },
+  {
     label: 'Edit',
     submenu: [
       { label: 'Undo', accelerator: 'CmdOrCtrl+Z', selector: 'undo:' },
@@ -106,7 +123,7 @@ if (process.platform === 'darwin') {
   });
 }
 if (process.platform === 'win32') {
-  template.unshift({
+  template.push({
     label: 'Help',
     submenu: [
       {

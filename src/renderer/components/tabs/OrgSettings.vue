@@ -175,6 +175,9 @@
             </select>
           </div>
         </div>
+        <div class="col-sm-12" v-if="isWindows">
+          Warning: OpenSSH on Windows does not support Proxy connections at this time.   So this feature will not work currently.   You will need to connect to your bastion host first and then ssh to your other servers from there.
+        </div>
         <div class="text-center">
           <button class="btn btn-sm btn-success" v-on:click="saveRegionSettings(awsRegion)">
             <i class="fa fa-save"></i> Save Settings
@@ -217,6 +220,7 @@ export default {
       scanning: {},
       customUser: {},
       useBastion: {},
+      isWindows: (process.platform === 'win32') ? 1 : 0,
       tab: null,
       awsUsers: [
         'ec2-user',

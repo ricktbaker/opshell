@@ -113,7 +113,9 @@ export default {
         env: process.env
       });
 
-      if (!server.bastionHost) {
+      console.log(server.bastionHost);
+      console.log(server);
+      if (!server.bastionHost || !server.bastion) {
         const serverCommand = 'ssh -o "UserKnownHostsFile /dev/null" -o StrictHostKeyChecking=no ' + keyPath + ' -l ' + server.user + ' ' + server.ip;
         this.ptyProcess.write(serverCommand + '\r\n');
       } else {
