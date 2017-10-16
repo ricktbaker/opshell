@@ -36,9 +36,18 @@ export default {
   data: function() {
     return {
       versions: {},
-      currentVersion: '0.1.1',
+      currentVersion: '0.1.2',
       changes:
       [
+        {
+          'version': '0.1.2',
+          'releaseDate': '2017-10-15',
+          'added': [],
+          'fixed': [
+            'Mispelling of Opshell, so db directory was in the wrong location.   Fixed with a small migration on startup'
+          ],
+          'changed': []
+        },
         {
           'version': '0.1.1',
           'releaseDate': '2017-10-13',

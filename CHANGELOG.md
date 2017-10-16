@@ -1,6 +1,12 @@
 # Opshell Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.1.2] - 2017-10-15
+### Fixed
+- Mispelling of Opshell in package.json, so db directory was in the wrong location.   Fixed with a small migration on startup
+## Changed
+- Slight adjustment to Menu Items.   Import/Export was moved to Opshell menu on Mac.   Added a Quit Opshell in the File Menu for Windows.
+
 ## [0.1.1] - 2017-10-14
 ### Fixed
 - Fixed a menu order issue with Windows.

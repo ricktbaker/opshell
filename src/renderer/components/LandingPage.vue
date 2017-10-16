@@ -28,6 +28,21 @@ const { app, dialog } = require('electron').remote;
 export default {
   name: 'landing-page',
   mounted: async function() {
+    /**
+     * Temp code to fix a mis-spelling of opsshell, will remove once everyone has updated
+     */
+    fs.pathExists(path.join(app.getPath('userData'), '../', 'opsshell'))
+      .then(async (exists) => {
+        if (exists) {
+          await fs.copy(path.join(app.getPath('userData'), '../', 'opsshell'), app.getPath('userData'));
+          fs.remove(path.join(app.getPath('userData'), '../', 'opsshell'));
+          this.$db.orgs.loadDatabase();
+          this.$db.awsRegions.loadDatabase();
+          this.$db.tempData.loadDatabase();
+          ipcRenderer.send('orgmenu.updateSelectBox');
+        }
+      });
+
     ipcRenderer.on('landingpage.exportSettings', () => {
       this.exportSettings();
     });
@@ -72,7 +87,6 @@ export default {
     doRestore: async function(tempDir) {
       const homeDir = path.join(app.getPath('home'), '.opshell');
       const dbDir = app.getPath('userData');
-      console.log(dbDir);
       await fs.copy(path.join(tempDir, 'opshell_export', 'opshell_keys'), homeDir);
       await fs.copy(path.join(tempDir, 'opshell_export', 'opshell_db'), dbDir);
       dir.files(homeDir, function(err, files) {

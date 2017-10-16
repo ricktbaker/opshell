@@ -1,6 +1,6 @@
 <template>
   <div class="col" id="mainView">
-    <ul class="nav nav-tabs" role="tablist" id="tabs" v-bind:class="{'tabs-background':tabs.length}">
+    <ul class="nav nav-tabs" role="tablist" id="tabs" v-bind:class="{'tabs-background':tabs.length > 0}">
       <li v-for="tab in tabs" class="nav-item" v-bind:key="tab.id">
         <a class="nav-link" role="tab" :href="'#tab' + tab.id" data-toggle="tab">
           <table class="navtable">
