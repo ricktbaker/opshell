@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 - Mispelling of Opshell in package.json, so db directory was in the wrong location.   Fixed with a small migration on startup
 ## Changed
 - Slight adjustment to Menu Items.   Import/Export was moved to Opshell menu on Mac.   Added a Quit Opshell in the File Menu for Windows.
+- More work on the css to prepare for theme switching.
 
 ## [0.1.1] - 2017-10-14
 ### Fixed
