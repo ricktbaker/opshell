@@ -1,6 +1,10 @@
 # Opshell Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.1.3] - 2017-10-16
+### Fixed
+- Recent Bastion Host fix for choosing not to use it, was causing it not to work when selected.
+
 ## [0.1.2] - 2017-10-15
 ### Fixed
 - Mispelling of Opshell in package.json, so db directory was in the wrong location.   Fixed with a small migration on startup

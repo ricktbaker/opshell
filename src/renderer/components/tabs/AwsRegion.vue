@@ -203,9 +203,8 @@ export default {
      * Initiate an SSH connection in a new tab
      */
     ssh: async function(instance) {
-      console.log(JSON.stringify(this.sshConnect[instance.instanceId], null, 2));
       let bastionHost;
-      if (this.sshConnect[instance.instanceId]) {
+      if (this.sshConnect[instance.instanceId]['bastion'] === 1) {
         _.each(this.instances, (inst) => {
           if (this.awsRegion.bastionHost === inst.instanceId) {
             bastionHost = inst;

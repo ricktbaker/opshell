@@ -36,9 +36,18 @@ export default {
   data: function() {
     return {
       versions: {},
-      currentVersion: '0.1.2',
+      currentVersion: '0.1.3',
       changes:
       [
+        {
+          'version': '0.1.3',
+          'releaseDate': '2017-10-16',
+          'added': [],
+          'fixed': [
+            'Recent Bastion Host fix for choosing not to use it, was causing it not to work when selected.'
+          ],
+          'changed': []
+        },
         {
           'version': '0.1.2',
           'releaseDate': '2017-10-15',

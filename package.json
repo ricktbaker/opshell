@@ -1,6 +1,6 @@
 {
   "name": "opshell",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "author": "rickbaker <rick@ricktbaker.com>",
   "description": "Ops Helper for quickly working with AWS instances across multiple regions.",
   "license": "MIT",
