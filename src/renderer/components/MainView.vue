@@ -29,7 +29,7 @@
     <!-- Tab panes -->
     <div class="tab-content">
       <div v-for="tab in tabs" v-bind:key="tab.id" role="tabpanel" class="tab-pane fade" :id="'tab' + tab.id">
-        <awsRegion v-if="tab.type === 'awsRegion'"></awsRegion>
+        <cloudService v-if="tab.type === 'cloudService'"></cloudService>
         <sshConnection v-if="tab.type === 'ssh'" class="sshterm"></sshConnection>
         <orgSettings v-if="tab.type === 'orgSettings'"></orgSettings>
         <whatsNew v-if="tab.type === 'whatsNew'"></whatsNew>
@@ -42,7 +42,7 @@
 <script>
 
 import { ipcRenderer } from 'electron';
-import AwsRegion from './tabs/AwsRegion.vue';
+import CloudService from './tabs/CloudService.vue';
 import SshConnection from './tabs/SshConnection.vue';
 import OrgSettings from './tabs/OrgSettings.vue';
 import WhatsNew from './tabs/WhatsNew.vue';
@@ -64,15 +64,15 @@ export default {
     });
     ipcRenderer.on('mainview.openTab', async (e, data) => {
       const org = await this.$db.orgs.cfindOne({ _id: data.org }).exec();
-      const awsRegion = await this.$db.awsRegions.cfindOne({_id: data.awsRegion}).exec();
+      const cloudService = await this.$db.cloudServices.cfindOne({_id: data.cloudId}).exec();
       const obj = {
         id: this.tabCount,
         type: data.type,
         tab: this.tabCount
       };
-      if (data.type === 'awsRegion') {
+      if (data.type === 'cloudService') {
         obj.org = org.name;
-        obj.name = awsRegion.region;
+        obj.name = cloudService.identifier;
         obj.icon = 'fa-cloud';
       } else if (data.type === 'ssh') {
         obj.org = org.name;
@@ -99,8 +99,8 @@ export default {
       data.tab = this.tabCount;
       this.tabCount += 1;
 
-      if (data.type === 'awsRegion') {
-        ipcRenderer.send('awsregion.regionData', data);
+      if (data.type === 'cloudService') {
+        ipcRenderer.send('cloudservice.data', data);
       } else if (data.type === 'ssh') {
         ipcRenderer.send('sshconnection.doSsh', data);
       } else if (data.type === 'orgSettings') {
@@ -109,11 +109,11 @@ export default {
     });
 
     // Should we display the whats new tab or the getting started tab?
-    const temp = await this.$db.tempData.cfindOne({type: 'intro'}).exec();
+    const temp = await this.$db.preferences.cfindOne({type: 'intro'}).exec();
     if (temp && temp.seen) {
       var pjson = require('../../../package.json');
 
-      const temp = await this.$db.tempData.cfindOne({type: 'whatsnew'}).exec();
+      const temp = await this.$db.preferences.cfindOne({type: 'whatsnew'}).exec();
 
       let seenVersion;
       if (!temp) {
@@ -134,7 +134,7 @@ export default {
     }
   },
   components: {
-    AwsRegion, SshConnection, OrgSettings, WhatsNew, GettingStarted
+    CloudService, SshConnection, OrgSettings, WhatsNew, GettingStarted
   },
   methods: {
     /**

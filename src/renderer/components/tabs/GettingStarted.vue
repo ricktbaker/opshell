@@ -13,7 +13,12 @@
     - Enter your AWS Access Keys (these keys will need to have the ec2.describeInstances permission).<br />
     - Default SSH User will be the default user selected from the user list when you want to SSH to a server.<br />
     </p><p>
-    <h5>Add SSH Keys</h5>
+    <h5>Add a Google Cloud Project</h5>
+    - Click the "Add Project" button.<br />
+    - Enter the Google Cloud Project Id<br />
+    - From your credentials.json file enter your email address and your private key for the project.
+    - Default SSH User will be selectable after you add custom users to your project.
+    <h5>Add SSH Keys for AWS Instances</h5>
     - Click the "Keys" button within the Region.<br />
     - Scan Region for Required Keys will scan all of your instances to look for the default SSH key required for access.<br />
     - Next to each key, you can click the "Import Key" button.<br />
@@ -50,7 +55,7 @@ export default {
     };
   },
   mounted: async function () {
-    await this.$db.tempData.update({type: 'intro'}, {type: 'intro', seen: true}, {upsert: true});
+    await this.$db.preferences.update({type: 'intro'}, {type: 'intro', seen: true}, {upsert: true});
   },
   methods: {
   }

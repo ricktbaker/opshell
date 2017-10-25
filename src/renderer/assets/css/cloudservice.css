@@ -1,32 +1,32 @@
-#regionTable {
+#cloudTable {
   font-size: 12px;
 }
-#regionTable .instanceData {
+#cloudTable .instanceData {
   cursor: pointer;
 }
-#regionTable tbody {
+#cloudTable tbody {
   border: none;
 }
-#regionTable tr td {
+#cloudTable tr td {
   border: none !important;
 }
-#regionTable tr th {
+#cloudTable tr th {
   border: none;
 }
-#regionTable .select {
+#cloudTable .select {
   font-size: 13px;
   margin: 0;
   padding: 0px 10px;
   border: none;
 }
-#regionSettingsHeader input {
+#cloudSettingsHeader input {
   font-size: 13px;
   height: 25px;
 }
-#regionHeaders th {
+#cloudHeaders th {
   cursor: pointer;
 }
-#regionTable .btn-ssh {
+#cloudTable .btn-ssh {
   font-size: 11px;
   padding: 1px 5px;
   cursor: pointer;

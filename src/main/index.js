@@ -76,16 +76,16 @@ ipcMain.on('mainview.openTab', (e, data) => {
   mainWindow.send('mainview.openTab', data);
 });
 
-ipcMain.on('awsregion.regionData', (e, data) => {
-  mainWindow.send('awsregion.regionData', data);
+ipcMain.on('cloudservice.data', (e, data) => {
+  mainWindow.send('cloudservice.data', data);
 });
 
 ipcMain.on('sshconnection.doSsh', (e, data) => {
   mainWindow.send('sshconnection.doSsh', data);
 });
 
-ipcMain.on('awsregion.updateTabData', (e, data) => {
-  mainWindow.send('awsregion.updateTabData', data);
+ipcMain.on('cloudservice.updateTabData', (e, data) => {
+  mainWindow.send('cloudservice.updateTabData', data);
 });
 
 ipcMain.on('orgMenuToggle', (e, data) => {

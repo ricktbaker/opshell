@@ -20,16 +20,33 @@
           Configure Org
         </button>
       </div>
-      <span style="cursor: pointer" v-on:click="toggleCaret('awsRegion')">
-      <i id="awsRegionCaret" class="fa" v-bind:class="{'fa-caret-right':awsRegionContent === false,'fa-caret-down':awsRegionContent === true}"></i> AWS Regions
-      <span style="float: right">({{awsRegions.length}})</span><br />
-      </span>
-      <div id="awsRegionContent" v-if="awsRegionContent === true">
-        <div v-on:click="openTab('awsRegion',awsRegion._id)" v-for="awsRegion in awsRegions" v-bind:key="awsRegion._id">
-          <i class="fa fa-cloud"></i>
-          {{awsRegion.region}}
+
+      <span v-if="awsRegionCount > 0">
+        <span style="cursor: pointer" v-on:click="toggleCaret('awsRegion')">
+        <i id="awsRegionCaret" class="fa" v-bind:class="{'fa-caret-right':awsRegionContent === false,'fa-caret-down':awsRegionContent === true}"></i> AWS Regions
+        <span style="float: right">({{awsRegionCount}})</span><br />
+        </span>
+        <div class="cloudServiceContent" v-if="awsRegionContent === true">
+          <div v-on:click="openTab('cloudService', 'awsRegion', cloudService._id)" v-for="cloudService in cloudServices" v-if="cloudService.type === 'awsRegion'" v-bind:key="cloudService._id">
+            <i class="fa fa-cloud"></i>
+            {{cloudService.identifier}}
+          </div>
         </div>
-      </div>
+      </span>
+
+      <span v-if="googleProjectCount > 0">
+        <span style="cursor: pointer" v-on:click="toggleCaret('googleProject')">
+        <i id="googleProjectCaret" class="fa" v-bind:class="{'fa-caret-right':googleProjectContent === false,'fa-caret-down':googleProjectContent === true}"></i> Google Projects
+        <span style="float: right">({{googleProjectCount}})</span><br />
+        </span>
+        <div class="cloudServiceContent" v-if="googleProjectContent === true">
+          <div v-on:click="openTab('cloudService', 'googleProject', cloudService._id)" v-for="cloudService in cloudServices" v-if="cloudService.type === 'googleProject'" v-bind:key="cloudService._id">
+            <i class="fa fa-cloud"></i>
+            {{cloudService.identifier}}
+          </div>
+        </div>
+      </span>
+
     </div>
   </div>
 </template>
@@ -42,29 +59,34 @@ export default {
   data: function() {
     return {
       org: {},
-      awsRegions: [],
+      cloudServices: [],
       orgs: [],
       test: [],
       selected: '',
       orgDetails: false,
-      awsRegionContent: false
+      awsRegionCount: 0,
+      googleProjectCount: 0,
+      awsRegionContent: false,
+      googleProjectContent: false
     };
   },
   mounted: function() {
     ipcRenderer.on('orgmenu.updateSelectBox', this.updateOrgs);
     ipcRenderer.on('orgmenu.updateSelectedOrg', this.changeOrg);
     this.awsRegionContent = false;
+    this.googleProjectContent = false;
   },
   methods: {
     newOrg: function() {
       ipcRenderer.send('alertbox.show', {type: 'newOrg'});
     },
-    openTab: function(type, value) {
+    openTab: function(type, cloud, value) {
       const data = {};
-      if (type === 'awsRegion') {
+      if (type === 'cloudService') {
         data.org = this.org._id;
-        data.type = type;
-        data.awsRegion = value;
+        data.type = 'cloudService';
+        data.cloudType = cloud;
+        data.cloudId = value;
         ipcRenderer.send('mainview.openTab', data);
       }
     },
@@ -74,6 +96,12 @@ export default {
           this.awsRegionContent = false;
         } else {
           this.awsRegionContent = true;
+        }
+      } else if (type === 'googleProject') {
+        if (this.googleProjectContent || close) {
+          this.googleProjectContent = false;
+        } else {
+          this.googleProjectContent = true;
         }
       }
     },
@@ -93,9 +121,12 @@ export default {
           } else {
             this.org = await this.$db.orgs.cfindOne({ _id: this.selected }).exec();
             if (this.org) {
-              this.awsRegions = await this.$db.awsRegions.cfind({org: this.org._id}).exec();
+              this.cloudServices = await this.$db.cloudServices.cfind({org: this.org._id}).exec();
+              this.awsRegionCount = await this.$db.cloudServices.count({org: this.org._id, type: 'awsRegion'});
+              this.googleProjectCount = await this.$db.cloudServices.count({org: this.org._id, type: 'googleProject'});
               this.orgDetails = true;
-              this.awsRegionContent = true;
+              this.awsRegionContent = false;
+              this.googleProjectConect = false;
             } else {
               this.orgDetails = false;
             }

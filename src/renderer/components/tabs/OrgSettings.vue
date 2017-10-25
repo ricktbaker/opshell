@@ -1,193 +1,228 @@
 <template>
   <div id="orgSettings">
-    <div class="form-group row">
-      <div class="col-sm-4 toggle" v-on:click="toggleAwsRegions()">
-        <i class="fa" v-bind:class="{ 'fa-caret-right': !awsRegionsExpanded, 'fa-caret-down': awsRegionsExpanded }"></i>
-        AWS REGIONS ({{awsRegions.length ? awsRegions.length: 0}})
+    <div class="cloudType" v-for="cloudType in cloudTypes" :key="cloudType">
+      <div class="form-group row">
+        <div class="col-sm-4 toggle" v-on:click="toggleCloudService(cloudType)">
+          <i class="fa" v-bind:class="{ 'fa-caret-right': !cloudServicesExpanded[cloudType], 'fa-caret-down': cloudServicesExpanded[cloudType] }"></i>
+          <span v-if="cloudType === 'awsRegion'">AWS REGIONS ({{awsRegionCount}})</span>
+          <span v-if="cloudType === 'googleProject'">Google Project ({{googleProjectCount}})</span>
+        </div>
+        <div class="col-sm-8 text-right">
+          <select v-if="newCloudService[cloudType] && cloudType === 'awsRegion'" class="newregion-select form-control" v-model="newCloudServiceIdentifier[cloudType]">
+            <option value="" selected>Select New Region</option>
+            <option v-if="regionAvailable(awsRegion.code)" v-for="awsRegion in awsRegionCodes" :value="awsRegion.code" :key="awsRegion.code">{{ awsRegion.code }} : {{ awsRegion.name }}</option>
+          </select>
+          <input v-if="newCloudService[cloudType] && cloudType === 'googleProject'" class="input input-sm" v-model="newCloudServiceIdentifier[cloudType]" />
+          <button class="btn btn-sm" v-bind:class="{'btn-default':!newCloudService[cloudType],'btn-success':newCloudService[cloudType]}" v-on:click="addCloudService(cloudType)">
+            <i class="fa fa-plus"></i>
+            <span v-if="cloudType === 'awsRegion'">Add Region</span>
+            <span v-if="cloudType === 'googleProject'">Add Project</span>
+          </button>
+          <button v-if="newCloudService" class="btn btn-sm btn-info" v-on:click="newCloudService[cloudType] = false">
+            <i class="fa fa-close"></i> Cancel
+          </button>
+        </div>
       </div>
-      <div class="col-sm-8 text-right">
-        <select v-if="newRegion" id="awsRegionId" class="newregion-select form-control" name="awsRegion" v-model="newRegionCode">
-          <option value="" selected>Select New Region</option>
-          <option v-if="regionAvailable(awsRegion.code)" v-for="awsRegion in awsRegionCodes" :value="awsRegion.code" :key="awsRegion.code">{{ awsRegion.code }} : {{ awsRegion.name }}</option>
-        </select>
-        <button class="btn btn-sm" v-bind:class="{'btn-default':!newRegion,'btn-success':newRegion}" v-on:click="addRegion()">
-          <i class="fa fa-plus"></i> Add Region
-        </button>
-        <button v-if="newRegion" class="btn btn-sm btn-info" v-on:click="newRegion = false">
-          <i class="fa fa-close"></i> Cancel
-        </button>
-      </div>
-    </div>
 
-    <div class="region regionBordered" :id="'region-' + awsRegion.region" v-for="awsRegion in awsRegions" v-bind:key="awsRegion.region" v-if="awsRegionsExpanded">
-      {{awsRegion.region}}
-      <span style="float: right">
-        <button class="btn btn-sm" v-bind:class="{'btn-default':!regionConfig[awsRegion.region],'btn-info':regionConfig[awsRegion.region]}" v-on:click="editRegion(awsRegion,'config')">
-          <i class="fa fa-edit"></i> Config
-        </button>
-        <button class="btn btn-sm" v-bind:class="{'btn-default':!regionKeys[awsRegion.region],'btn-info':regionKeys[awsRegion.region]}" v-on:click="editRegion(awsRegion, 'keys')">
-          <i class="fa fa-key"></i> Keys
-        </button>
-        <button class="btn btn-sm" v-bind:class="{'btn-default':!regionUsers[awsRegion.region],'btn-info':regionUsers[awsRegion.region]}" v-on:click="editRegion(awsRegion, 'users')">
-          <i class="fa fa-user-circle"></i> Users
-        </button>
-        <button class="btn btn-sm" v-bind:class="{'btn-default':!regionSettings[awsRegion.region],'btn-info':regionSettings[awsRegion.region]}" v-on:click="editRegion(awsRegion, 'settings')">
-          <i class="fa fa-cog"></i> Settings
-        </button>
-      </span>
+      <div class="cloud cloudBordered" v-for="cloudService in cloudServices" v-bind:key="cloudService.identifier" v-if="cloudService.type === cloudType && cloudServicesExpanded[cloudService.type]">
+        {{cloudService.identifier}}
+        <span style="float: right">
+          <button class="btn btn-sm" v-bind:class="{'btn-default':!cloudConfig[cloudService.identifier],'btn-info':cloudConfig[cloudService.identifier]}" v-on:click="editCloud(cloudService,'config')">
+            <i class="fa fa-edit"></i> Config
+          </button>
+          <button v-if="cloudService.type === 'awsRegion'" class="btn btn-sm" v-bind:class="{'btn-default':!cloudKeys[cloudService.identifier],'btn-info':cloudKeys[cloudService.identifier]}" v-on:click="editCloud(cloudService, 'keys')">
+            <i class="fa fa-key"></i> Keys
+          </button>
+          <button class="btn btn-sm" v-bind:class="{'btn-default':!cloudUsers[cloudService.identifier],'btn-info':cloudUsers[cloudService.identifier]}" v-on:click="editCloud(cloudService, 'users')">
+            <i class="fa fa-user-circle"></i> Users
+          </button>
+          <button class="btn btn-sm" v-bind:class="{'btn-default':!cloudSettings[cloudService.identifier],'btn-info':cloudSettings[cloudService.identifier]}" v-on:click="editCloud(cloudService, 'settings')">
+            <i class="fa fa-cog"></i> Settings
+          </button>
+        </span>
 
-      <div class="regionConfig" v-if="regionConfig[awsRegion.region]">
-        <form>
-          <div class="form-group">
-            <label for="accessKey" class="col-sm col-form-label">
-              AWS Access Key Id
-              <i class="fa fa-question-circle-o" title="This access key must have the ec2:describeInstances permission"></i>
-            </label>
-            <div class="col-sm-12">
-              <input type="text" class="form-control input-sm" v-model="awsRegion.accessKey" placeholder="Access Key Id">
+        <div class="cloudConfig" v-if="cloudConfig[cloudService.identifier]">
+          <form>
+            <div class="form-group" v-if="cloudService.type === 'awsRegion'">
+              <label for="accessKey" class="col-sm col-form-label">
+                AWS Access Key Id
+                <i class="fa fa-question-circle-o" title="This access key must have the ec2:describeInstances permission"></i>
+              </label>
+              <div class="col-sm-12">
+                <input type="text" class="form-control input-sm" v-model="cloudService.awsAccessKey" placeholder="Access Key Id">
+              </div>
+              <label for="accessKey" class="col-sm col-form-label">
+                AWS Secret Key
+              </label>
+              <div class="col-sm-12">
+                <input type="text" class="form-control input-sm" v-model="cloudService.awsSecretKey" placeholder="Access Key Id">
+              </div>
+              <label for="accessKey" class="col-sm col-form-label">
+                Default SSH User
+              </label>
+              <div class="col-sm-12">
+                <select class="userSelect form-control" v-model="cloudService.defaultUser">
+                  <option v-if="cloudService.type === 'awsRegion'" v-for="user in regionSSHUsers" :value="user" :key="user">{{ user }}</option>
+                  <option v-if="cloudService.type === 'googleProject'" v-for="user in projectSSHUsers" :value="user" :key="user">{{ user }}</option>
+                </select>
+              </div>
             </div>
-            <label for="accessKey" class="col-sm col-form-label">
-              AWS Secret Key
-            </label>
-            <div class="col-sm-12">
-              <input type="text" class="form-control input-sm" v-model="awsRegion.secretKey" placeholder="Access Key Id">
+            <div class="form-group" v-if="cloudService.type === 'googleProject'">
+              <label for="accessKey" class="col-sm col-form-label">
+                Client Email
+              </label>
+              <div class="col-sm-12">
+                <input type="text" class="form-control input-sm" v-model="cloudService.googleClientEmail" placeholder="Client Email">
+              </div>
+              <label for="accessKey" class="col-sm col-form-label">
+                Private Key
+              </label>
+              <div class="col-sm-12">
+                <input type="text" class="form-control input-sm" v-model="cloudService.googlePrivateKey" />
+              </div>
+              <label for="accessKey" class="col-sm col-form-label">
+                Default SSH User
+              </label>
+              <div class="col-sm-12">
+                <select class="userSelect form-control" v-model="cloudService.defaultUser">
+                  <option v-if="cloudService.type === 'awsRegion'" v-for="user in regionSSHUsers" :value="user" :key="user">{{ user }}</option>
+                  <option v-if="cloudService.type === 'googleProject'" v-for="user in projectSSHUsers" :value="user" :key="user">{{ user }}</option>
+                </select>
+              </div>
             </div>
-            <label for="accessKey" class="col-sm col-form-label">
-              Default SSH User
-            </label>
-            <div class="col-sm-12">
-              <select class="userSelect form-control" v-model="awsRegion.defaultUser">
-                <option v-for="user in regionSSHUsers" :value="user" :key="user">{{ user }}</option>
-              </select>
+            <div class="text-center">
+              <button v-on:click="updateCloudService(cloudService)" type="button" class="btn btn-success btn-sm">
+                <i class="fa fa-save"></i>
+                Update Config
+              </button>
+              <button v-on:click="deleteCloudService(cloudService)" type="button"class="btn btn-danger btn-sm">
+                <i class="fa fa-trash"></i>
+                <span v-if="cloudService.type === 'awsRegion'">
+                Delete Region
+                </span>
+                <span v-if="cloudService.type === 'googleProject'">
+                  Delete Project
+                </span>
+              </button>
+              <button class="btn btn-sm btn-default" v-on:click="editCloud(cloudService, 'config')">
+                <i class="fa fa-close"></i> Cancel
+              </button>
             </div>
-          </div>
+          </form>
+        </div>
+
+        <div class="cloudKeys" v-if="cloudKeys[cloudService.identifier] && cloudService.type === 'awsRegion'">
+          AWS Default User Keys
+          <button v-on:click="scanRegion(cloudService)" class="pull-right btn btn-sm btn-success">
+            <i class="fa" v-bind:class="{'fa-spinner fa-spin fa-fw': scanning[cloudService.identifier],'fa-key': !scanning[cloudService.identifier]}"></i>
+            Scan Region for Required Keys
+          </button>
+
+          <table class="keystable table table-sm table-condensed table-striped">
+            <thead>
+              <tr>
+                <th style="width: 50%">Key Name</th>
+                <th>Imported</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="key in cloudService.keys" v-bind:key="key.keyName" v-if="!key.custom">
+                <td>{{ key.keyName }}</td>
+                <td>
+                  {{ key.value ? 'Yes' : 'No'}}
+                  <label class="btn btn-success btn-sm btn-file pull-right">
+                    <span v-if="!key.value"><i class="fa fa-save"></i> Import Key</span>
+                    <span v-else><i class="fa fa-save"></i> Update Key</span>
+                    <input type="file" @change="onFileChange($event, cloudService, key.keyName)" style="display: none">
+                  </label>
+                </td>
+              </tr>
+            </tbody>
+          </table>
           <div class="text-center">
-            <button v-on:click="updateAwsRegion(awsRegion)" type="button" class="btn btn-success btn-sm">
-              <i class="fa fa-save"></i>
-              Update Config
-            </button>
-            <button v-on:click="deleteRegion(awsRegion)" type="button"class="btn btn-danger btn-sm">
-              <i class="fa fa-trash"></i>
-              Delete Region
-            </button>
-            <button class="btn btn-sm btn-default" v-on:click="editRegion(awsRegion, 'config')">
+            <button class="btn btn-sm btn-default" v-on:click="editCloud(cloudService, 'keys')">
               <i class="fa fa-close"></i> Cancel
             </button>
           </div>
-        </form>
-      </div>
-
-      <div class="regionKeys" v-if="regionKeys[awsRegion.region]">
-        AWS Default User Keys
-        <button v-on:click="scanRegion(awsRegion)" class="pull-right btn btn-sm btn-success">
-          <i class="fa" v-bind:class="{'fa-spinner fa-spin fa-fw': scanning[awsRegion.region],'fa-key': !scanning[awsRegion.region]}"></i>
-          Scan Region for Required Keys
-        </button>
-
-        <table class="keystable table table-sm table-condensed table-striped">
-          <thead>
-            <tr>
-              <th style="width: 50%">Key Name</th>
-              <th>Imported</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="key in awsRegion.keys" v-bind:key="key.keyName" v-if="!key.custom">
-              <td>{{ key.keyName }}</td>
-              <td>
-                {{ key.value ? 'Yes' : 'No'}}
-                <label class="btn btn-success btn-sm btn-file pull-right">
-                  <span v-if="!key.value"><i class="fa fa-save"></i> Import Key</span>
-                  <span v-else><i class="fa fa-save"></i> Update Key</span>
-                  <input type="file" @change="onFileChange($event, awsRegion, key.keyName)" style="display: none">
-                </label>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <div class="text-center">
-          <button class="btn btn-sm btn-default" v-on:click="editRegion(awsRegion, 'keys')">
-            <i class="fa fa-close"></i> Cancel
-          </button>
         </div>
-      </div>
 
-      <div class="regionKeys" v-if="regionUsers[awsRegion.region]">
-        <div class="form-group row">
-          <div class="col-sm-4">
-            Custom User Keys
+        <div class="cloudKeys" v-if="cloudUsers[cloudService.identifier]">
+          <div class="form-group row">
+            <div class="col-sm-4">
+              Custom User Keys
+            </div>
+            <div class="col-sm-8 text-right">
+              <label>
+                <input v-model="customUser[cloudService.identifier]" id="newCustomUser" class="form-control input-sm" placeholder="Enter New User" />
+              </label>
+              <button class="btn btn-sm btn-success" v-on:click="addUser(cloudService)">
+                <i class="fa fa-plus"></i> Add User
+              </button>
+            </div>
           </div>
-          <div class="col-sm-8 text-right">
-            <label>
-              <input v-model="customUser[awsRegion.region]" id="newCustomUser" class="form-control input-sm" placeholder="Enter New User" />
-            </label>
-            <button class="btn btn-sm btn-success" v-on:click="addUser(awsRegion)">
-              <i class="fa fa-plus"></i> Add User
+
+          <table class="keystable table table-sm table-condensed table-striped">
+            <thead>
+              <tr>
+                <th style="width: 50%">User</th>
+                <th>Imported</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="key in cloudService.keys" v-bind:key="key.keyName" v-if="key.custom">
+                <td>{{ key.keyName }}</td>
+                <td>
+                  {{ key.value ? 'Yes' : 'No'}}
+                  <label class="btn btn-success btn-sm btn-file pull-right">
+                    <span v-if="!key.value"><i class="fa fa-save"></i> Import Key</span>
+                    <span v-else><i class="fa fa-save"></i> Update Key</span>
+                    <input type="file" @change="onFileChange($event, cloudService, key.keyName)" style="display: none;">
+                  </label>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="text-center">
+            <button class="btn btn-sm btn-default" v-on:click="editCloud(cloudService, 'users')">
+              <i class="fa fa-close"></i> Cancel
             </button>
           </div>
         </div>
 
-        <table class="keystable table table-sm table-condensed table-striped">
-          <thead>
-            <tr>
-              <th style="width: 50%">User</th>
-              <th>Imported</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="key in awsRegion.keys" v-bind:key="key.keyName" v-if="key.custom">
-              <td>{{ key.keyName }}</td>
-              <td>
-                {{ key.value ? 'Yes' : 'No'}}
-                <label class="btn btn-success btn-sm btn-file pull-right">
-                  <span v-if="!key.value"><i class="fa fa-save"></i> Import Key</span>
-                  <span v-else><i class="fa fa-save"></i> Update Key</span>
-                  <input type="file" @change="onFileChange($event, awsRegion, key.keyName)" style="display: none;">
-                </label>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <div class="text-center">
-          <button class="btn btn-sm btn-default" v-on:click="editRegion(awsRegion, 'users')">
-            <i class="fa fa-close"></i> Cancel
-          </button>
+        <div class="cloudKeys" v-if="cloudSettings[cloudService.identifier]">
+          Settings:
+          <div class="row">
+            <div class="col-sm-4">
+              <input type="checkbox" id="useBastion" v-model="useBastion[cloudService.identifier]" value="true">
+              <label for="useBastion">Use Bastion Host</label>
+            </div>
+            <div class="col-sm-4" v-if="useBastion[cloudService.identifier]">
+              <select class="form-control input-sm" v-model="cloudService.bastionHost">
+                <option value="" selected>Select Bastion Host</option>
+                <option v-if="instance.publicIp" v-for="instance in cloudInstances[cloudService.identifier]" :value="instance.instanceId" :key="instance.instanceId">{{ instance.name}} : {{ instance.publicIp }} </option>
+              </select>
+            </div>
+            <div class="col-sm-4" v-if="useBastion[cloudService.identifier]">
+              <select class="form-control input-sm" v-model="cloudService.bastionUser">
+                <option value="" selected>Select SSH User</option>
+                <option v-if="cloudService.type === 'awsRegion'" v-for="user in regionSSHUsers" :value="user" :key="user">{{ user }}</option>
+                <option v-if="cloudService.type === 'googleProject'" v-for="user in projectSSHUsers" :value="user" :key="user">{{ user }}</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-sm-12" v-if="isWindows">
+            Warning: OpenSSH on Windows does not support Proxy connections at this time.   So this feature will not work currently.   You will need to connect to your bastion host first and then ssh to your other servers from there.
+          </div>
+          <div class="text-center">
+            <button class="btn btn-sm btn-success" v-on:click="saveCloudSettings(cloudService)">
+              <i class="fa fa-save"></i> Save Settings
+            </button>
+            <button class="btn btn-sm btn-default" v-on:click="editCloud(cloudService, 'settings')">
+              <i class="fa fa-close"></i> Cancel
+            </button>
+          </div>
         </div>
       </div>
-
-      <div class="regionKeys" v-if="regionSettings[awsRegion.region]">
-        Settings:
-        <div class="row">
-          <div class="col-sm-4">
-            <input type="checkbox" id="useBastion" v-model="useBastion[awsRegion.region]" value="true">
-            <label for="useBastion">Use Bastion Host</label>
-          </div>
-          <div class="col-sm-4" v-if="useBastion[awsRegion.region]">
-            <select class="form-control input-sm" v-model="awsRegion.bastionHost">
-              <option value="" selected>Select Bastion Host</option>
-              <option v-if="instance.publicIp" v-for="instance in regionInstances[awsRegion.region]" :value="instance.instanceId" :key="instance.instanceId">{{ instance.name}} : {{ instance.publicIp }} </option>
-            </select>
-          </div>
-          <div class="col-sm-4" v-if="useBastion[awsRegion.region]">
-            <select class="form-control input-sm" v-model="awsRegion.bastionUser">
-              <option value="" selected>Select SSH User</option>
-              <option v-for="user in awsUsers" :value="user" :key="user">{{ user }}</option>
-            </select>
-          </div>
-        </div>
-        <div class="col-sm-12" v-if="isWindows">
-          Warning: OpenSSH on Windows does not support Proxy connections at this time.   So this feature will not work currently.   You will need to connect to your bastion host first and then ssh to your other servers from there.
-        </div>
-        <div class="text-center">
-          <button class="btn btn-sm btn-success" v-on:click="saveRegionSettings(awsRegion)">
-            <i class="fa fa-save"></i> Save Settings
-          </button>
-          <button class="btn btn-sm btn-default" v-on:click="editRegion(awsRegion, 'settings')">
-            <i class="fa fa-close"></i> Cancel
-          </button>
-        </div>
-      </div>
-
     </div>
     <button id="deleteOrg" class="btn btn-sm btn-danger" v-on:click="deleteOrg()">
       <i class="fa fa-trash"></i>
@@ -202,21 +237,25 @@ import _ from 'lodash';
 import fs from 'fs-extra';
 import path from 'path';
 import AWS from 'aws-sdk';
+import GoogleCloud from 'google-cloud';
 const { app } = require('electron').remote;
 export default {
   name: 'orgSettings',
   data: function() {
     return {
-      awsRegionsExpanded: false,
-      regionConfig: {},
-      regionKeys: {},
-      regionUsers: {},
-      regionSettings: {},
-      regionInstances: [],
+      cloudTypes: ['awsRegion', 'googleProject'],
+      cloudServicesExpanded: {},
+      cloudConfig: {},
+      cloudKeys: {},
+      cloudUsers: {},
+      cloudSettings: {},
+      cloudInstances: [],
       org: {},
-      awsRegions: [],
-      newRegion: false,
-      newRegionCode: '',
+      cloudServices: [],
+      awsRegionCount: 0,
+      googleProjectCount: 0,
+      newCloudService: {},
+      newCloudServiceIdentifier: {},
       scanning: {},
       customUser: {},
       useBastion: {},
@@ -229,8 +268,8 @@ export default {
         'root'
       ],
       regionSSHUsers: [
-
       ],
+      projectSSHUsers: [],
       awsRegionCodes: [
         {
           code: 'us-east-1',
@@ -309,10 +348,9 @@ export default {
     ipcRenderer.on('orgsettings.loadData', async (e, data) => {
       this.getOrgData(data);
       this.tab = data.tab;
-      if (data.regionSettings) {
-        this.editRegion(data.regionSettings, 'settings');
+      if (data.cloudSettings) {
+        this.editCloud(data.cloudSettings, 'settings');
       }
-      this.awsRegionsExpanded = true;
     });
   },
   methods: {
@@ -327,15 +365,19 @@ export default {
           };
         }
         this.org = await this.$db.orgs.cfindOne({ _id: data.org }).exec();
-        this.awsRegions = await this.$db.awsRegions.cfind({ org: data.org }).exec();
-        _.each(this.awsRegions, (region) => {
-          if (region.useBastion === true) {
-            this.$set(this.useBastion, region.region, true);
+        this.cloudServices = await this.$db.cloudServices.cfind({ org: data.org }).exec();
+        this.awsRegionCount = await this.$db.cloudServices.count({org: data.org, type: 'awsRegion'});
+        this.googleProjectCount = await this.$db.cloudServices.count({org: data.org, type: 'googleProject'});
+        _.each(this.cloudServices, (cloudService) => {
+          if (cloudService.useBastion === true) {
+            this.$set(this.useBastion, cloudService.identifier, true);
           }
           const keys = this.awsUsers;
-          _.each(region.keys, (key) => {
+          this.projectSSHUsers = [];
+          _.each(cloudService.keys, (key) => {
             if (key.custom) {
               keys.push(key.keyName);
+              this.projectSSHUsers.push(key.keyName);
             }
           });
           this.regionSSHUsers = keys;
@@ -348,33 +390,36 @@ export default {
       }
     },
     /**
-     * Toggle AWS Regions display
+     * Toggle Cloud Service display
      */
-    toggleAwsRegions: function() {
-      if (this.awsRegionsExpanded) {
-        this.awsRegionsExpanded = false;
+    toggleCloudService: function(type) {
+      if (this.cloudServicesExpanded[type]) {
+        this.$set(this.cloudServicesExpanded, type, false);
       } else {
-        this.awsRegionsExpanded = true;
+        this.$set(this.cloudServicesExpanded, type, true);
       }
     },
     /**
-     * Add region to db
+     * Add new cloud service to db
      */
-    addRegion: async function() {
+    addCloudService: async function(type) {
       const vue = this;
-      if (!this.newRegion) {
-        this.newRegion = true;
+      if (!this.newCloudService[type]) {
+        this.$set(this.newCloudService, type, true);
       } else {
-        if (this.newRegionCode) {
-          const awsRegionObj = {
+        if (this.newCloudServiceIdentifier[type]) {
+          const cloudServiceObj = {
             org: this.org._id,
-            region: this.newRegionCode
+            identifier: this.newCloudServiceIdentifier[type],
+            type: type
           };
-          const newRegion = await this.$db.awsRegions.insert(awsRegionObj);
+          const newCloudService = await this.$db.cloudServices.insert(cloudServiceObj);
           this.getOrgData({org: this.org._id}, () => {
-            vue.awsRegionsExpanded = true;
-            vue.regionConfig[newRegion.region] = true;
-            ipcRenderer.send('alertbox.show', {type: 'tempMessage', msg: vue.newRegionCode + ' has been added.   You can now configure for use'});
+            vue.$set(vue.cloudServicesExpanded, type, true);
+            vue.cloudConfig[newCloudService.identifier] = true;
+            vue.$set(vue.newCloudService[type], false);
+            vue.$set(vue.newCloudServiceIdentifier[type], false);
+            ipcRenderer.send('alertbox.show', {type: 'tempMessage', msg: vue.newCloudServiceIdentifier + ' has been added.   You can now configure for use'});
           });
         }
       }
@@ -383,98 +428,98 @@ export default {
      * Check if region has already been addded
      */
     regionAvailable: function(region) {
-      return !_.find(this.awsRegions, {region: region});
+      return !_.find(this.cloudServices, {identifier: region, type: 'awsRegion'});
     },
     /**
-     * Edit details for a region
+     * Edit details for a cloud service
      */
-    editRegion: function(awsRegion, type) {
-      const region = awsRegion.region;
+    editCloud: function(cloudService, type) {
+      const cloudIdentifier = cloudService.identifier;
       if (type === 'config') {
-        if (this.regionConfig[region]) {
-          this.$set(this.regionConfig, region, false);
+        if (this.cloudConfig[cloudIdentifier]) {
+          this.$set(this.cloudConfig, cloudIdentifier, false);
         } else {
-          this.awsRegionsExpanded = true;
-          this.$set(this.regionConfig, region, true);
-          this.$set(this.regionKeys, region, false);
-          this.$set(this.regionUsers, region, false);
-          this.$set(this.regionSettings, region, false);
+          this.$set(this.cloudServicesExpanded, type, true);
+          this.$set(this.cloudConfig, cloudIdentifier, true);
+          this.$set(this.cloudKeys, cloudIdentifier, false);
+          this.$set(this.cloudUsers, cloudIdentifier, false);
+          this.$set(this.cloudSettings, cloudIdentifier, false);
         }
       } else if (type === 'keys') {
-        if (this.regionKeys[region]) {
-          this.$set(this.regionKeys, region, false);
+        if (this.cloudKeys[cloudIdentifier]) {
+          this.$set(this.cloudKeys, cloudIdentifier, false);
         } else {
-          this.awsRegionsExpanded = true;
-          this.$set(this.regionKeys, region, true);
-          this.$set(this.regionConfig, region, false);
-          this.$set(this.regionUsers, region, false);
-          this.$set(this.regionSettings, region, false);
+          this.$set(this.cloudServicesExpanded, type, true);
+          this.$set(this.cloudKeys, cloudIdentifier, true);
+          this.$set(this.cloudConfig, cloudIdentifier, false);
+          this.$set(this.cloudUsers, cloudIdentifier, false);
+          this.$set(this.cloudSettings, cloudIdentifier, false);
         }
       } else if (type === 'users') {
-        if (this.regionUsers[region]) {
-          this.$set(this.regionUsers, region, false);
+        if (this.cloudUsers[cloudIdentifier]) {
+          this.$set(this.cloudUsers, cloudIdentifier, false);
         } else {
-          this.awsRegionsExpanded = true;
-          this.$set(this.regionUsers, region, true);
-          this.$set(this.regionConfig, region, false);
-          this.$set(this.regionKeys, region, false);
-          this.$set(this.regionSettings, region, false);
+          this.$set(this.cloudServicesExpanded, type, true);
+          this.$set(this.cloudUsers, cloudIdentifier, true);
+          this.$set(this.cloudConfig, cloudIdentifier, false);
+          this.$set(this.cloudKeys, cloudIdentifier, false);
+          this.$set(this.cloudSettings, cloudIdentifier, false);
         }
       } else if (type === 'settings') {
-        if (this.regionSettings[region]) {
-          this.$set(this.regionSettings, region, false);
+        if (this.cloudSettings[cloudIdentifier]) {
+          this.$set(this.cloudSettings, cloudIdentifier, false);
         } else {
-          this.instanceScan(awsRegion);
-          this.awsRegionsExpanded = true;
-          this.$set(this.regionSettings, region, true);
-          this.$set(this.regionConfig, region, false);
-          this.$set(this.regionKeys, region, false);
-          this.$set(this.regionUsers, region, false);
+          this.instanceScan(cloudService);
+          this.$set(this.cloudServicesExpanded, type, true);
+          this.$set(this.cloudSettings, cloudIdentifier, true);
+          this.$set(this.cloudConfig, cloudIdentifier, false);
+          this.$set(this.cloudKeys, cloudIdentifier, false);
+          this.$set(this.cloudUsers, cloudIdentifier, false);
         }
       }
     },
     /**
-     * Delete a region
+     * Delete a cloud service
      */
-    deleteRegion: async function(awsRegion) {
-      if (confirm('Are you sure you want to delete this region?  All associated SSH keys will be purged.')) {
-        this.$db.awsRegions.remove({ _id: awsRegion._id });
+    deleteCloudService: async function(cloudService) {
+      if (confirm('Are you sure you want to delete ' + cloudService.identifier + '?  All associated SSH keys will be purged.')) {
+        this.$db.cloudServices.remove({ _id: cloudService._id });
         const appData = app.getPath('home');
-        const dirPath = path.join(appData, '.opshell', this.org.name, awsRegion.region).replace(/\s+/g, '-');
+        const dirPath = path.join(appData, '.opshell', this.org.name, cloudService.identifier).replace(/\s+/g, '-');
         fs.emptyDir(dirPath);
         ipcRenderer.send('orgmenu.updateselectedOrg');
-        this.regionConfig[awsRegion.region] = false;
-        this.regionKeys[awsRegion.region] = false;
+        this.cloudConfig[cloudService.identifier] = false;
+        this.cloudKeys[cloudService.identifier] = false;
         this.getOrgData();
       } else {
         return false;
       }
     },
     /**
-     * Update an aws region
+     * Update an a cloud service
      */
-    updateAwsRegion: async function(awsRegion) {
-      this.$db.awsRegions.update({_id: awsRegion._id}, awsRegion);
-      ipcRenderer.send('alertbox.show', {type: 'tempMessage', msg: this.newRegionCode + ' configuration has been updated'});
+    updateCloudService: async function(cloudService) {
+      this.$db.cloudServices.update({_id: cloudService._id}, cloudService);
+      ipcRenderer.send('alertbox.show', {type: 'tempMessage', msg: cloudService.identifier + ' configuration has been updated'});
       ipcRenderer.send('orgmenu.updateSelectedOrg');
     },
     /**
      * Scan aws region for keys
      */
     scanRegion: function(awsRegion) {
-      this.$set(this.scanning, awsRegion.region, true);
+      this.$set(this.scanning, awsRegion.identifier, true);
       const vue = this;
       AWS.config.update({
-        region: awsRegion.region,
-        accessKeyId: awsRegion.accessKey,
-        secretAccessKey: awsRegion.secretKey
+        region: awsRegion.identifier,
+        accessKeyId: awsRegion.awsAccessKey,
+        secretAccessKey: awsRegion.awsSecretKey
       });
 
       const ec2 = new AWS.EC2();
       ec2.describeInstances(async function(err, data) {
         if (err) {
           ipcRenderer.send('alertbox.show', {type: 'tempMessage', error: 'true', msg: err.message});
-          vue.$set(vue.scanning, awsRegion.region, false);
+          vue.$set(vue.scanning, awsRegion.identifier, false);
         } else {
           if (!Array.isArray(awsRegion.keys)) {
             awsRegion.keys = [];
@@ -491,105 +536,133 @@ export default {
               }
             });
           });
-          await vue.$db.awsRegions.update({ _id: awsRegion._id }, awsRegion);
+          await vue.$db.cloudServices.update({ _id: awsRegion._id }, awsRegion);
           this.awsRegion = awsRegion;
           vue.getOrgData();
-          vue.$set(vue.scanning, awsRegion.region, false);
+          vue.$set(vue.scanning, awsRegion.identifier, false);
         }
       });
     },
     /**
      * Import an ssh key
      */
-    async onFileChange(e, awsRegion, keyName) {
+    async onFileChange(e, cloudService, keyName) {
       try {
         var files = e.target.files || e.dataTransfer.files;
         if (!files.length) return;
         const appData = app.getPath('home');
-        const dirPath = path.join(appData, '.opshell', this.org.name, awsRegion.region).replace(/\s+/g, '-');
+        const dirPath = path.join(appData, '.opshell', this.org.name, cloudService.identifier).replace(/\s+/g, '-');
         const fullPath = path.join(dirPath, keyName);
         const data = await fs.readFile(files[0].path);
         await fs.ensureDir(dirPath);
         await fs.writeFile(fullPath, data);
         await fs.chmod(fullPath, '0600');
-        awsRegion.keys.some(function(el) {
+        cloudService.keys.some(function(el) {
           if (keyName === el.keyName) {
             el.value = true;
           }
         });
-        await this.$db.awsRegions.update({ _id: awsRegion._id }, awsRegion);
+        await this.$db.cloudServices.update({ _id: cloudService._id }, cloudService);
       } catch (err) {
         console.log(err);
       }
     },
     /**
-     * Add a new custom user to a region
+     * Add a new custom user to a cloud service
      */
-    addUser: async function(awsRegion) {
-      const newUser = this.customUser[awsRegion.region];
+    addUser: async function(cloudService) {
+      const newUser = this.customUser[cloudService.identifier];
       if (newUser) {
-        this.$set(this.customUser, awsRegion.region, '');
-        if (!awsRegion.keys) {
-          awsRegion.keys = [];
+        this.$set(this.customUser, cloudService.identifier, '');
+        if (!cloudService.keys) {
+          cloudService.keys = [];
         }
-        awsRegion.keys.push({keyName: newUser, value: null, custom: true});
-        await this.$db.awsRegions.update({ _id: awsRegion._id }, awsRegion);
+        cloudService.keys.push({keyName: newUser, value: null, custom: true});
+        await this.$db.cloudServices.update({ _id: cloudService._id }, cloudService);
         this.getOrgData();
       }
     },
     /**
-     * Scan Instances in this region
+     * Scan Instances in this cloud service
      */
-    instanceScan: function(awsRegion) {
+    instanceScan: function(cloudService) {
       const vue = this;
-      AWS.config.update({
-        region: awsRegion.region,
-        accessKeyId: awsRegion.accessKey,
-        secretAccessKey: awsRegion.secretKey
-      });
+      if (cloudService.type === 'googleProject') {
+        const gcloud = GoogleCloud({
+          projectId: cloudService.identifier,
+          credentials: {
+            client_email: cloudService.googleClientEmail,
+            private_key: cloudService.googlePrivateKey.replace(/\\n/g, '\n')
+          }
+        });
+        const gce = gcloud.compute();
 
-      const ec2 = new AWS.EC2();
-      ec2.describeInstances(function(err, data) {
-        if (err) {
-          ipcRenderer.send('alertbox.show', {type: 'tempMessage', error: 'true', msg: err.message});
-        } else {
+        gce.getVMs(function(err, vms) {
+          if (err) {
+            ipcRenderer.send('alertbox.show', {type: 'message', error: true, msg: err.message});
+          }
           const instances = [];
-          _.each(data.Reservations, (reservationData) => {
+          _.each(vms, function(vm) {
             const instance = {};
-            _.each(reservationData.Instances, (instanceData) => {
-              instance.instanceId = instanceData.InstanceId;
-              instance.state = instanceData.State.Name;
-              instance.publicIp = instanceData.PublicIpAddress;
-              _.each(instanceData.Tags, (tagData) => {
-                if (tagData.Key === 'Name') {
-                  instance.name = tagData.Value;
-                }
-              });
-            });
+            instance.instanceId = vm.metadata.id;
+            instance.state = vm.metadata.status;
+            instance.publicIp = vm.metadata.networkInterfaces[0].accessConfigs[0].natIP;
+            instance.name = vm.name;
             instances.push(instance);
           });
-          vue.$set(vue.regionInstances, awsRegion.region, instances);
-        }
-      });
+          vue.$set(vue.cloudInstances, cloudService.identifier, instances);
+        });
+      }
+      if (cloudService.type === 'awsRegion') {
+        AWS.config.update({
+          region: cloudService.identifier,
+          accessKeyId: cloudService.awsAccessKey,
+          secretAccessKey: cloudService.awsSecretKey
+        });
+
+        const ec2 = new AWS.EC2();
+        ec2.describeInstances(function(err, data) {
+          if (err) {
+            ipcRenderer.send('alertbox.show', {type: 'tempMessage', error: 'true', msg: err.message});
+          } else {
+            const instances = [];
+            _.each(data.Reservations, (reservationData) => {
+              const instance = {};
+              _.each(reservationData.Instances, (instanceData) => {
+                instance.instanceId = instanceData.InstanceId;
+                instance.state = instanceData.State.Name;
+                instance.publicIp = instanceData.PublicIpAddress;
+                _.each(instanceData.Tags, (tagData) => {
+                  if (tagData.Key === 'Name') {
+                    instance.name = tagData.Value;
+                  }
+                });
+              });
+              instances.push(instance);
+            });
+            vue.$set(vue.cloudInstances, cloudService.identifier, instances);
+          }
+        });
+      }
     },
     /**
-     * Save Region Settings
+     * Save Cloud Service Settings
      */
-    saveRegionSettings: async function(awsRegion) {
-      awsRegion.useBastion = this.useBastion[awsRegion.region];
-      await this.$db.awsRegions.update({ _id: awsRegion._id }, awsRegion);
+    saveCloudSettings: async function(cloudService) {
+      cloudService.useBastion = this.useBastion[cloudService.identifier];
+      await this.$db.cloudServices.update({ _id: cloudService._id }, cloudService);
       this.getOrgData();
-      ipcRenderer.send('alertbox.show', {type: 'tempMessage', msg: awsRegion.region + ' settings have been saved'});
+      ipcRenderer.send('alertbox.show', {type: 'tempMessage', msg: cloudService.identifier + ' settings have been saved'});
       if (this.tab) {
-        ipcRenderer.send('awsregion.updateTabData', {tab: this.tab});
+        ipcRenderer.send('cloudservice.updateTabData', {tab: this.tab});
       }
     },
     /**
      * Delete organization
      */
     deleteOrg: async function() {
-      if (confirm('Are you sure you want to delete this Organization?  All associated regions and SSH keys will be purged.')) {
-        this.$db.awsRegions.remove({org: this.org._id}, {multi: true});
+      if (confirm('Are you sure you want to delete this Organization?  All associated configs and SSH keys will be purged.')) {
+        this.$db.cloudServices.remove({org: this.org._id}, {multi: true});
         this.$db.orgs.remove({_id: this.org._id});
         const appData = app.getPath('home');
         const dirPath = path.join(appData, '.opshell', this.org.name).replace(/\s+/g, '-');

@@ -52,11 +52,11 @@
   padding-bottom: 5px;
 }
 
-#leftMenuExpanded #awsRegionContent {
+#leftMenuExpanded .cloudServiceContent {
   margin-left: 10px;
 }
 
-#leftMenuExpanded #awsRegionContent div:hover {
+#leftMenuExpanded .cloudServiceContent div:hover {
   cursor: pointer;
 }
 

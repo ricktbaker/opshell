@@ -14,5 +14,17 @@ export default ({
   tempData: new Datastore({
     autoload: true,
     filename: path.join(remote.app.getPath('userData'), '/temp.db')
+  }),
+  googleProjects: new Datastore({
+    autoload: true,
+    filename: path.join(remote.app.getPath('userData'), 'google_projects.db')
+  }),
+  cloudServices: new Datastore({
+    autoload: true,
+    filename: path.join(remote.app.getPath('userData'), '/cloud_services.db')
+  }),
+  preferences: new Datastore({
+    autoload: true,
+    filename: path.join(remote.app.getPath('userData'), '/preferences.db')
   })
 });

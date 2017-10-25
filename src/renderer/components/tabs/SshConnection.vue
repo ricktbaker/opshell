@@ -35,7 +35,7 @@ export default {
       connected: false,
       stream: null,
       org: null,
-      awsRegion: null,
+      cloudService: null,
       ptyProcess: null,
       instance: {}
     };
@@ -92,6 +92,31 @@ export default {
     },
     ssh: async function (server) {
       const vue = this;
+      /**
+       *
+        theme: {
+        foreground: '#ffffff',
+        background: '#000',
+        cursor: '#ffffff',
+        selection: 'rgba(255, 255, 255, 0.3)',
+        black: '#000000',
+        red: '#e06c75',
+        brightRed: '#e06c75',
+        green: '#A4EFA1',
+        brightGreen: '#A4EFA1',
+        brightYellow: '#EDDC96',
+        yellow: '#EDDC96',
+        magenta: '#e39ef7',
+        brightMagenta: '#e39ef7',
+        cyan: '#5fcbd8',
+        brightBlue: '#5fcbd8',
+        brightCyan: '#5fcbd8',
+        blue: '#5fcbd8',
+        white: '#d0d0d0',
+        brightBlack: '#808080',
+        brightWhite: '#ffffff'
+      }
+       */
       this.term = new Terminal({
       });
       this.term.open(document.getElementById('terminal' + this.tab), true);
@@ -99,8 +124,11 @@ export default {
 
       const appData = app.getPath('home');
       let keyPath = '';
-      const keyCheck = path.join(appData, '.opshell', this.org.name, this.awsRegion.region, server.instance.keyFile).replace(/\s+/g, '-');
-      if (fs.pathExists(keyCheck)) {
+      let keyCheck = path.join(appData, '.opshell', this.org.name, this.cloudService.identifier, server.user).replace(/\s+/g, '-');
+      if (!fs.existsSync(keyCheck)) {
+        keyCheck = path.join(appData, '.opshell', this.org.name, this.cloudService.identifier, server.instance.keyFile).replace(/\s+/g, '-');
+      }
+      if (fs.existsSync(keyCheck)) {
         keyPath = ' -i ' + keyCheck;
       }
       var shell = os.platform() === 'win32' ? 'powershell.exe' : 'bash';
@@ -116,8 +144,8 @@ export default {
         const serverCommand = 'ssh -o "UserKnownHostsFile /dev/null" -o StrictHostKeyChecking=no ' + keyPath + ' -l ' + server.user + ' ' + server.ip;
         this.ptyProcess.write(serverCommand + '\r\n');
       } else {
-        const bastionKeyPath = ' -i ' + path.join(appData, '.opshell', this.org.name, this.awsRegion.region, server.bastionHost.keyFile).replace(/\s+/g, '-');
-        const bastionCommand = 'ssh -t -o "UserKnownHostsFile /dev/null" -o StrictHostKeyChecking=no -o ProxyCommand=\'ssh ' + bastionKeyPath + ' -l ' + this.awsRegion.bastionUser + ' ' + server.bastionHost.publicIp + ' nc %h %p\' ' + keyPath + ' -l ' + server.user + ' ' + server.ip;
+        const bastionKeyPath = ' -i ' + path.join(appData, '.opshell', this.org.name, this.cloudService.identifier, server.bastionHost.keyFile).replace(/\s+/g, '-');
+        const bastionCommand = 'ssh -t -o "UserKnownHostsFile /dev/null" -o StrictHostKeyChecking=no -o ProxyCommand=\'ssh ' + bastionKeyPath + ' -l ' + this.cloudService.bastionUser + ' ' + server.bastionHost.publicIp + ' nc %h %p\' ' + keyPath + ' -l ' + server.user + ' ' + server.ip;
         this.ptyProcess.write(bastionCommand + '\r\n');
       }
       this.ptyProcess.on('data', function(data) {
@@ -179,7 +207,7 @@ export default {
         this.instance = server.instance;
         this.rendered = true;
         this.org = await this.$db.orgs.cfindOne({ _id: server.org }).exec();
-        this.awsRegion = await this.$db.awsRegions.cfindOne({_id: server.awsRegion}).exec();
+        this.cloudService = await this.$db.cloudServices.cfindOne({_id: server.cloudServiceId}).exec();
         this.ssh(server);
         this.tab = server.tab;
       }

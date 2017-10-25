@@ -48,6 +48,10 @@ select {
   background: black !important;
   color: #aaaaaa !important;
 }
+textarea {
+  background: black !important;
+  color: #aaaaaa !important;
+}
 .table-striped>tbody>tr:nth-child(odd)>td,
 .table-striped>tbody>tr:nth-child(odd)>th {
 	background-color: #111111;
@@ -156,23 +160,23 @@ select {
   border-bottom: 1px solid #cccccc;
 }
 
-#leftMenuExpanded #awsRegionContent div:hover {
+#leftMenuExpanded .cloudServiceContent div:hover {
   background: black;
 }
 
 /**
  * Aws Region
  */
-#regionTable tbody:nth-child(odd) {
+#cloudTable tbody:nth-child(odd) {
   background: #333333 !important;
 }
-#regionTable tbody {
+#cloudTable tbody {
   border-bottom: 1px solid #555555;
 }
-#regionTable tr th {
+#cloudTable tr th {
   background: #111111;
 }
-#regionSettingsHeader th {
+#cloudSettingsHeader th {
   background: #222222 !important;
   border-bottom: 1px solid #555555;
 }
@@ -191,14 +195,14 @@ select {
 /**
  * Org Settings
  */
-#orgSettings .regionBordered {
+#orgSettings .cloudBordered {
   box-shadow: 4px 4px 8px #000;
   border: 1px solid #666666;
 }
-#orgSettings .regionKeys {
+#orgSettings .cloudKeys {
   background: #444444;
 }
-#orgSettings .regionConfig {
+#orgSettings .cloudConfig {
   background: #444444;
 }
 #orgSettings .keystable {

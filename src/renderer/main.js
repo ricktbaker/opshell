@@ -12,6 +12,7 @@ import 'font-awesome/css/font-awesome.css';
 import 'jquery/dist/jquery.min.js';
 import 'bootstrap/dist/js/bootstrap.js';
 import 'xterm/dist/xterm.js';
+import 'xterm/dist/xterm.css';
 
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'));
 Vue.http = Vue.prototype.$http = axios;

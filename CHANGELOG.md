@@ -1,6 +1,14 @@
 # Opshell Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.2.0] - 2017-10-24
+### Added
+- Added support for Google Cloud Project Instances in addition to AWS instances.
+### Changed
+- Completely reworked aws regions to a more generic cloud services to support the addition of google cloud support.   This includes data migration, css changes as well as all functionality within tabs and org settings.
+- Moved the data for remembering how you connect to an invidual server out of the temp database and into the db for the current cloud service.
+- Moved the temp.db to a new preferences.db to support future preference settings.
+
 ## [0.1.3] - 2017-10-16
 ### Fixed
 - Recent Bastion Host fix for choosing not to use it, was causing it not to work when selected.
@@ -8,7 +16,7 @@ All notable changes to this project will be documented in this file.
 ## [0.1.2] - 2017-10-15
 ### Fixed
 - Mispelling of Opshell in package.json, so db directory was in the wrong location.   Fixed with a small migration on startup
-## Changed
+### Changed
 - Slight adjustment to Menu Items.   Import/Export was moved to Opshell menu on Mac.   Added a Quit Opshell in the File Menu for Windows.
 - More work on the css to prepare for theme switching.
 

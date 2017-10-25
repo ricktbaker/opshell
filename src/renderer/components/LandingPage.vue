@@ -38,10 +38,44 @@ export default {
           fs.remove(path.join(app.getPath('userData'), '../', 'opsshell'));
           this.$db.orgs.loadDatabase();
           this.$db.awsRegions.loadDatabase();
+          this.$db.cloudServices.loadDatabase();
           this.$db.tempData.loadDatabase();
           ipcRenderer.send('orgmenu.updateSelectBox');
         }
       });
+
+    /**
+     * Data migration from awsRegions to cloudServices
+     * Temp_data to prefs
+     */
+    const temp = await this.$db.preferences.cfindOne({type: 'regionMigrate'}).exec();
+    if (!temp) {
+      const regions = await this.$db.awsRegions.cfind({}).exec();
+      _.each(regions, async (region) => {
+        const cloudObj = {
+          org: region.org,
+          type: 'awsRegion',
+          identifier: region.region,
+          awsAccessKey: region.accessKey,
+          awsSecretKey: region.secretKey,
+          defaultUser: region.defaultUser,
+          _id: region._id,
+          keys: region.keys,
+          useBastion: region.useBastion,
+          bastionUser: region.bastionUser,
+          bastionHost: region.bastionHost
+        };
+        await this.$db.cloudServices.insert(cloudObj);
+      });
+      await fs.copy(path.join(app.getPath('userData'), 'temp.db'), path.join(app.getPath('userData'), 'preferences.db'));
+      this.$db.preferences.loadDatabase();
+      this.$db.preferences.remove({ type: 'region' }, {multi: true});
+      this.$db.orgs.loadDatabase();
+      this.$db.awsRegions.loadDatabase();
+      this.$db.cloudServices.loadDatabase();
+      ipcRenderer.send('orgmenu.updateSelectBox');
+      await this.$db.preferences.update({type: 'regionMigrate'}, {type: 'regionMigrate', value: 1}, {upsert: true});
+    }
 
     ipcRenderer.on('landingpage.exportSettings', () => {
       this.exportSettings();
@@ -96,7 +130,7 @@ export default {
         });
       });
       this.$db.orgs.loadDatabase();
-      this.$db.awsRegions.loadDatabase();
+      this.$db.cloudServices.loadDatabase();
       this.$db.tempData.loadDatabase();
       fs.emptyDir(tempDir);
       ipcRenderer.send('orgmenu.updateSelectBox');
@@ -138,7 +172,7 @@ export default {
       appData = app.getPath('userData');
       archive.file(path.join(appData, 'orgs.db'), { name: 'opshell_export/opshell_db/orgs.db' });
       archive.file(path.join(appData, 'temp.db'), { name: 'opshell_export/opshell_db/temp.db' });
-      archive.file(path.join(appData, 'aws_regions.db'), { name: 'opshell_export/opshell_db/aws_regions.db' });
+      archive.file(path.join(appData, 'cloud_services.db'), { name: 'opshell_export/opshell_db/cloud_services.db' });
       archive.finalize();
     }
   }

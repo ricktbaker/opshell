@@ -36,9 +36,22 @@ export default {
   data: function() {
     return {
       versions: {},
-      currentVersion: '0.1.3',
+      currentVersion: '0.2.0',
       changes:
       [
+        {
+          'version': '0.2.0',
+          'releaseDate': '2017-10-24',
+          'added': [
+            'Added support for Google Cloud Project Instances in addition to AWS instances.'
+          ],
+          'fixed': [],
+          'changed': [
+            'Completely reworked aws regions to a more generic cloud services to support the addition of google cloud support.   This includes data migration, css changes as well as all functionality within tabs and org settings',
+            'Moved the data for remembering how you connect to an invidual server out of the temp database and into the db for the current cloud service',
+            'Moved the temp.db to a new preferences.db to support future preference settings'
+          ]
+        },
         {
           'version': '0.1.3',
           'releaseDate': '2017-10-16',
@@ -216,7 +229,7 @@ export default {
     };
   },
   mounted: async function () {
-    await this.$db.tempData.update({type: 'whatsnew'}, {type: 'whatsnew', version: this.currentVersion}, {upsert: true});
+    await this.$db.preferences.update({type: 'whatsnew'}, {type: 'whatsnew', version: this.currentVersion}, {upsert: true});
   },
   methods: {
     showVersion: function(version) {

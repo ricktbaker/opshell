@@ -1,16 +1,16 @@
 <template>
-  <table id="regionTable" class="table table-sm table-condensed">
+  <table id="cloudTable" class="table table-sm table-condensed">
     <thead>
-      <tr id="regionSettingsHeader">
+      <tr id="cloudSettingsHeader">
         <th colspan="2">
           <input id="instanceSearch" v-on:keyup="instanceSearch()" class="form-control input-sm" placeholder="Search instances"></input>
         </th>
         <th>
         </th>
         <th colspan="3">
-          <i v-on:click="regionSettings()" class="fa fa-cog fa-2x pull-right" title="Region Settings"></i>
+          <i v-on:click="cloudSettings()" class="fa fa-cog fa-2x pull-right" title="Cloud Service Settings"></i>
         </th>
-      <tr id="regionHeaders">
+      <tr id="cloudHeaders">
         <th v-on:click="doSort('name')">Name &nbsp;
           <i class="fa" v-if="sortKey === 'name'" v-bind:class="{'fa-caret-down':sortDir==='asc','fa-caret-up':sortDir==='desc'}"></i>
         </th>
@@ -47,14 +47,15 @@
         <td colspan=7>
           SSH Connect as
           <select class="select" v-model="sshConnect[instance.instanceId]['user']">
-            <option v-for="user in sshUsers" :value="user" :key="user">{{ user }}</option>
+            <option v-if="cloudService.type === 'awsRegion'" v-for="user in awsSshUsers" :value="user" :key="user">{{ user }}</option>
+            <option v-if="cloudService.type === 'googleProject'" v-for="user in googleSshUsers" :value="user" :key="user">{{ user }}</option>
           </select>
           to
           <select class="select" v-model="sshConnect[instance.instanceId]['ip']">
             <option v-if="instance.privateIp" :value="instance.privateIp">Private IP</option>
             <option v-if="instance.publicIp" :value="instance.publicIp">Public IP</option>
           </select>
-          <select v-if="awsRegion.useBastion && awsRegion.bastionHost != instance.instanceId" class="select" v-model="sshConnect[instance.instanceId]['bastion']">
+          <select v-if="cloudService.useBastion && cloudService.bastionHost != instance.instanceId" class="select" v-model="sshConnect[instance.instanceId]['bastion']">
             <option value="1">Using Bastion Host</option>
             <option value="0">Not Using Bastion Host</option>
           </select>
@@ -68,9 +69,10 @@
 <script>
 import { ipcRenderer } from 'electron';
 import AWS from 'aws-sdk';
+import GoogleCloud from 'google-cloud';
 import _ from 'lodash';
 export default {
-  name: 'awsRegion',
+  name: 'cloudService',
   data: function() {
     return {
       defaultUsers: [
@@ -79,37 +81,37 @@ export default {
         'centos',
         'root'
       ],
-      sshUsers: [],
+      awsSshUsers: [],
+      googleSshUsers: [],
       details: {},
       orgId: null,
-      awsRegionId: null,
+      cloudServiceId: null,
       instances: [],
       instanceData: [],
       test: null,
       tab: null,
-      awsRegion: null,
+      cloudService: null,
       org: null,
       rendered: false,
-      tempData: [],
       sortKey: null,
       sortDir: null,
-      sshConnect: []
+      sshConnect: {}
     };
   },
   mounted: function () {
-    ipcRenderer.on('awsregion.updateTabData', (e, data) => {
+    ipcRenderer.on('cloudservice.updateTabData', (e, data) => {
       if (data.tab === this.tab) {
         this.getData();
       }
     });
-    ipcRenderer.on('awsregion.regionData', (e, data) => {
+    ipcRenderer.on('cloudservice.data', (e, data) => {
       if (this.rendered === false) {
         this.tab = data.tab;
-        this.awsRegionId = data.awsRegion;
+        this.cloudServiceId = data.cloudId;
         this.orgId = data.org;
         this.rendered = true;
         this.getData(() => {
-          this.regionData();
+          this.getInstances();
         });
       }
     });
@@ -159,17 +161,16 @@ export default {
     },
 
     /**
-     * Get data form Db
+     * Get data from Db
      */
     getData: async function(cb) {
       this.org = await this.$db.orgs.cfindOne({ _id: this.orgId }).exec();
-      this.awsRegion = await this.$db.awsRegions.cfindOne({_id: this.awsRegionId}).exec();
-      const tempData = await this.$db.tempData.cfind({org: this.orgId, region: this.awsRegionId, type: 'region'}).exec();
-      this.tempData = new Map(tempData.map(element => [element.name, element]));
-      this.sshUsers = this.defaultUsers;
-      _.each(this.awsRegion.keys, (key) => {
+      this.cloudService = await this.$db.cloudServices.cfindOne({_id: this.cloudServiceId}).exec();
+      this.awsSshUsers = this.defaultUsers;
+      _.each(this.cloudService.keys, (key) => {
         if (key.custom) {
-          this.sshUsers.push(key.keyName);
+          this.awsSshUsers.push(key.keyName);
+          this.googleSshUsers.push(key.keyName);
         }
       });
       if (typeof (cb) === 'function') {
@@ -178,13 +179,13 @@ export default {
     },
 
     /**
-     * Open up region settings modal
+     * Open up cloud settings modal
      */
-    regionSettings: function() {
+    cloudSettings: function() {
       const data = {};
       data.org = this.org._id;
       data.type = 'orgSettings';
-      data.regionSettings = this.awsRegion;
+      data.cloudSettings = this.cloudService;
       ipcRenderer.send('mainview.openTab', data);
     },
 
@@ -206,7 +207,7 @@ export default {
       let bastionHost;
       if (this.sshConnect[instance.instanceId]['bastion'] === 1) {
         _.each(this.instances, (inst) => {
-          if (this.awsRegion.bastionHost === inst.instanceId) {
+          if (this.cloudService.bastionHost === inst.instanceId) {
             bastionHost = inst;
           }
         });
@@ -214,84 +215,120 @@ export default {
       const data = {
         type: 'ssh',
         org: this.orgId,
-        awsRegion: this.awsRegionId,
+        cloudServiceId: this.cloudServiceId,
         instance: instance,
         tab: instance.tab,
         user: this.sshConnect[instance.instanceId]['user'],
         ip: this.sshConnect[instance.instanceId]['ip'],
         bastionHost: bastionHost
       };
-      const newTemp = {
-        instanceId: instance.instanceId,
-        name: instance.name,
-        org: this.orgId,
-        region: this.awsRegionId,
-        type: 'region',
-        user: data.user,
-        ip: data.ip
-      };
-      await this.$db.tempData.update(
-        {
-          org: this.orgId,
-          region: this.awsRegionId,
-          type: 'region',
-          instanceId: instance.instanceId
-        },
-        newTemp,
-        { upsert: true });
-      this.getData();
+      if (!_.find(this.cloudService.connections, {name: instance.name})) {
+        const newTemp = {
+          instanceId: instance.instanceId,
+          name: instance.name,
+          user: data.user,
+          ip: data.ip
+        };
+        await this.$db.cloudServices.update(
+          {_id: this.cloudService._id},
+          {$push: {connections: newTemp}});
+
+        this.getData();
+      }
       ipcRenderer.send('mainview.openTab', data);
     },
-    regionData: function() {
+    getInstances: function() {
       const vue = this;
+      if (this.cloudService.type === 'googleProject') {
+        const gcloud = GoogleCloud({
+          projectId: this.cloudService.identifier,
+          credentials: {
+            client_email: this.cloudService.googleClientEmail,
+            private_key: this.cloudService.googlePrivateKey.replace(/\\n/g, '\n')
+          }
+        });
+        const gce = gcloud.compute();
 
-      AWS.config.update({
-        region: this.awsRegion.region,
-        accessKeyId: this.awsRegion.accessKey,
-        secretAccessKey: this.awsRegion.secretKey
-      });
-
-      const ec2 = new AWS.EC2();
-      ec2.describeInstances(function(err, data) {
-        if (err) {
-          ipcRenderer.send('alertbox.show', {type: 'message', error: true, msg: err.message});
-        } else {
+        gce.getVMs(function(err, vms) {
+          if (err) {
+            ipcRenderer.send('alertbox.show', {type: 'message', error: true, msg: err.message});
+          }
           const instances = [];
-          _.each(data.Reservations, (reservationData) => {
+          _.each(vms, function(vm) {
             const instance = {};
-            _.each(reservationData.Instances, (instanceData) => {
-              instance.instanceId = instanceData.InstanceId;
-              instance.instanceType = instanceData.InstanceType;
-              instance.availabilityZone = instanceData.Placement.AvailabilityZone;
-              instance.state = instanceData.State.Name;
-              instance.publicIp = instanceData.PublicIpAddress;
-              instance.privateIp = instanceData.PrivateIpAddress;
-              instance.keyFile = instanceData.KeyName;
-              _.each(instanceData.Tags, (tagData) => {
-                if (tagData.Key === 'Name') {
-                  instance.name = tagData.Value;
-                }
-              });
-              const tempData = vue.tempData.get(instance.name);
-              instance.defaultUser = tempData ? tempData.user : vue.awsRegion.defaultUser;
-              instance.defaultIp = tempData ? tempData.ip : null;
-            });
+            instance.instanceId = vm.metadata.id.toString();
+            instance.instanceType = vm.metadata.machineType.substr(vm.metadata.machineType.lastIndexOf('/') + 1);
+            instance.availabilityZone = vm.metadata.zone.substr(vm.metadata.zone.lastIndexOf('/') + 1);
+            instance.state = vm.metadata.status;
+            instance.publicIp = vm.metadata.networkInterfaces[0].accessConfigs[0].natIP;
+            instance.privateIp = vm.metadata.networkInterfaces[0].networkIP;
+            instance.keyFile = '';
+            instance.name = vm.name;
+            let matching = _.find(vue.cloudService.connections, {name: instance.name});
+            instance.defaultUser = matching ? matching.user : vue.cloudService.defaultUser;
+            instance.defaultIp = matching ? matching.ip : null;
             instances.push(instance);
             vue.$set(vue.sshConnect, instance.instanceId, {
               user: instance.defaultUser,
               ip: instance.defaultIp,
-              bastion: vue.awsRegion.useBastion ? 1 : 0
+              bastion: vue.cloudService.useBastion ? 1 : 0
             });
           });
           vue.instances = instances;
           vue.instanceData = vue.instances;
           vue.doSort();
-        }
-      });
+        });
+      }
+
+      if (this.cloudService.type === 'awsRegion') {
+        AWS.config.update({
+          region: this.cloudService.identifier,
+          accessKeyId: this.cloudService.awsAccessKey,
+          secretAccessKey: this.cloudService.awsSecretKey
+        });
+
+        const ec2 = new AWS.EC2();
+        ec2.describeInstances(function(err, data) {
+          if (err) {
+            ipcRenderer.send('alertbox.show', {type: 'message', error: true, msg: err.message});
+          } else {
+            const instances = [];
+            _.each(data.Reservations, (reservationData) => {
+              const instance = {};
+              _.each(reservationData.Instances, (instanceData) => {
+                instance.instanceId = instanceData.InstanceId;
+                instance.instanceType = instanceData.InstanceType;
+                instance.availabilityZone = instanceData.Placement.AvailabilityZone;
+                instance.state = instanceData.State.Name;
+                instance.publicIp = instanceData.PublicIpAddress;
+                instance.privateIp = instanceData.PrivateIpAddress;
+                instance.keyFile = instanceData.KeyName;
+                _.each(instanceData.Tags, (tagData) => {
+                  if (tagData.Key === 'Name') {
+                    instance.name = tagData.Value;
+                  }
+                });
+                let matching = _.find(vue.cloudService.connections, {name: instance.name});
+                instance.defaultUser = matching ? matching.user : vue.cloudService.defaultUser;
+                instance.defaultIp = matching ? matching.ip : null;
+              });
+              instances.push(instance);
+              vue.$set(vue.sshConnect, instance.instanceId, {
+                user: instance.defaultUser,
+                ip: instance.defaultIp,
+                bastion: vue.cloudService.useBastion ? 1 : 0
+              });
+            });
+            vue.instances = instances;
+            vue.instanceData = vue.instances;
+            vue.doSort();
+          }
+        });
+      }
     }
   }
 };
 </script>
 <style>
-@import '../../assets/css/awsregion.css'
+@import '../../assets/css/cloudservice.css'
 </style>
