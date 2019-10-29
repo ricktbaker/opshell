@@ -73,7 +73,7 @@
     "google-cloud": "^0.57.0",
     "grpc": "^1.6.6",
     "jquery": "^3.2.1",
-    "lodash": "^4.17.4",
+    "lodash": "^4.17.13",
     "nedb": "^1.8.0",
     "nedb-promise": "^2.0.1",
     "node-dir": "^0.1.17",
