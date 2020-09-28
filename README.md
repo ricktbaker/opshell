@@ -6,7 +6,7 @@
 <br>
 <br>
 </div>
-Update: While I still use this on a regular basis, as you can tell from the last update, I haven't had a chance to do any new work on it in quite some time.  If anyone is looking to contribute, please let me know.
+<b>Looking for contributors</b>: While I still use this on a regular basis, as you can tell from the last update, I haven't had a chance to do any new work on it in quite some time.  If anyone is looking to contribute, please let me know.
 <hr />
 This is my current pet project which is meant to help those that work with a number of AWS accounts.   Always having to login to the console to find the server you want to connect to, if you need to use a bastion host, what key you need to use, etc.
 
