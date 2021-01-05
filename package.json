@@ -62,7 +62,7 @@
   "dependencies": {
     "archiver": "^2.1.0",
     "aws-sdk": "^2.122.0",
-    "axios": "^0.16.1",
+    "axios": "^0.21.1",
     "bootbox": "^4.4.0",
     "bootstrap": "4.0.0-alpha.6",
     "chmodr": "^1.0.2",
